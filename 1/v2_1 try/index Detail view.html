@@ -1,0 +1,491 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Water Vending Monitor - Machine Detail</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/chart.js/3.7.0/chart.min.js"></script>
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-gray-50">
+    <!-- Sidebar (same as previous) -->
+    <div class="fixed inset-y-0 left-0 w-64 bg-white shadow-lg">
+        <div class="flex items-center justify-center h-16 border-b">
+            <h1 class="text-xl font-bold text-blue-600">Water Vending Monitor</h1>
+        </div>
+        <nav class="mt-6">
+            <div class="px-4 py-3 text-gray-600 hover:bg-gray-50 cursor-pointer">
+                <i class="fas fa-home mr-2"></i>Dashboard
+            </div>
+            <div class="px-4 py-3 bg-blue-50 text-blue-700">
+                <i class="fas fa-cube mr-2"></i>Machines
+            </div>
+            <div class="px-4 py-3 text-gray-600 hover:bg-gray-50 cursor-pointer">
+                <i class="fas fa-chart-line mr-2"></i>Analytics
+            </div>
+            <div class="px-4 py-3 text-gray-600 hover:bg-gray-50 cursor-pointer">
+                <i class="fas fa-cog mr-2"></i>Settings
+            </div>
+        </nav>
+    </div>
+
+    <!-- Main Content -->
+    <div class="ml-64 p-8">
+        <!-- Header with Back Button -->
+        <div class="flex items-center mb-8">
+            <button class="mr-4 p-2 hover:bg-gray-100 rounded-lg" onclick="history.back()">
+                <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18" />
+                </svg>
+            </button>
+            <div>
+                <div class="flex items-center space-x-3">
+                    <h2 class="text-2xl font-bold text-gray-800">Vending Machine #1</h2>
+                    <span class="px-2 py-1 bg-green-100 text-green-600 rounded-full text-sm">Online</span>
+                </div>
+                <p class="text-gray-500">Location A - Last Update: 2 minutes ago</p>
+            </div>
+        </div>
+
+        <!-- Top Stats -->
+        <div class="grid grid-cols-4 gap-6 mb-8">
+            <div class="bg-white p-6 rounded-lg shadow-sm">
+                <div class="flex justify-between items-start mb-4">
+                    <div>
+                        <div class="text-gray-500">TDS Level</div>
+                        <div class="text-3xl font-bold">118 ppm</div>
+                    </div>
+                    <span class="text-green-500">▲ 2%</span>
+                </div>
+                <div class="h-20">
+                    <canvas id="tdsChart"></canvas>
+                </div>
+            </div>
+            
+            <div class="bg-white p-6 rounded-lg shadow-sm">
+                <div class="flex justify-between items-start mb-4">
+                    <div>
+                        <div class="text-gray-500">pH Level</div>
+                        <div class="text-3xl font-bold">7.1</div>
+                    </div>
+                    <span class="text-gray-500">━</span>
+                </div>
+                <div class="h-20">
+                    <canvas id="phChart"></canvas>
+                </div>
+            </div>
+
+            <div class="bg-white p-6 rounded-lg shadow-sm">
+                <div class="flex justify-between items-start mb-4">
+                    <div>
+                        <div class="text-gray-500">Water Level</div>
+                        <div class="text-3xl font-bold">87%</div>
+                    </div>
+                    <span class="text-red-500">▼ 5%</span>
+                </div>
+                <div class="h-20">
+                    <canvas id="waterLevelChart"></canvas>
+                </div>
+            </div>
+
+            <div class="bg-white p-6 rounded-lg shadow-sm">
+                <div class="flex justify-between items-start mb-4">
+                    <div>
+                        <div class="text-gray-500">Today's Sales</div>
+                        <div class="text-3xl font-bold">142</div>
+                    </div>
+                    <span class="text-green-500">▲ 12%</span>
+                </div>
+                <div class="h-20">
+                    <canvas id="salesChart"></canvas>
+                </div>
+            </div>
+        </div>
+
+        <!-- Main Content Grid -->
+        <div class="grid grid-cols-3 gap-6">
+            <!-- Left Column -->
+            <div class="col-span-2 space-y-6">
+                <!-- Detailed Chart -->
+                <div class="bg-white p-6 rounded-lg shadow-sm">
+                    <div class="flex justify-between items-center mb-6">
+                        <h3 class="font-semibold text-gray-800">Water Quality Metrics</h3>
+                        <select class="px-3 py-1 border rounded-lg text-sm">
+                            <option>Last 24 Hours</option>
+                            <option>Last Week</option>
+                            <option>Last Month</option>
+                        </select>
+                    </div>
+                    <div class="h-80">
+                        <canvas id="detailedChart"></canvas>
+                    </div>
+                </div>
+
+                <!-- Recent Activity -->
+                <div class="bg-white p-6 rounded-lg shadow-sm">
+                    <h3 class="font-semibold text-gray-800 mb-4">Recent Activity</h3>
+                    <div class="space-y-4">
+                        <div class="flex items-center justify-between py-2 border-b">
+                            <div class="flex items-center space-x-3">
+                                <div class="w-2 h-2 rounded-full bg-blue-500"></div>
+                                <div>
+                                    <div class="text-sm font-medium">600ml Water Dispensed</div>
+                                    <div class="text-xs text-gray-500">TDS: 118ppm, pH: 7.1</div>
+                                </div>
+                            </div>
+                            <div class="text-sm text-gray-500">2 mins ago</div>
+                        </div>
+                        <div class="flex items-center justify-between py-2 border-b">
+                            <div class="flex items-center space-x-3">
+                                <div class="w-2 h-2 rounded-full bg-yellow-500"></div>
+                                <div>
+                                    <div class="text-sm font-medium">Water Level Warning</div>
+                                    <div class="text-xs text-gray-500">Level dropped to 87%</div>
+                                </div>
+                            </div>
+                            <div class="text-sm text-gray-500">15 mins ago</div>
+                        </div>
+                        <div class="flex items-center justify-between py-2 border-b">
+                            <div class="flex items-center space-x-3">
+                                <div class="w-2 h-2 rounded-full bg-blue-500"></div>
+                                <div>
+                                    <div class="text-sm font-medium">1000ml Water Dispensed</div>
+                                    <div class="text-xs text-gray-500">TDS: 117ppm, pH: 7.1</div>
+                                </div>
+                            </div>
+                            <div class="text-sm text-gray-500">25 mins ago</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Right Column -->
+            <div class="space-y-6">
+                <!-- Quick Actions -->
+                <div class="bg-white p-6 rounded-lg shadow-sm">
+                    <h3 class="font-semibold text-gray-800 mb-4">Quick Actions</h3>
+                    <div class="space-y-3">
+                        <button class="w-full px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700">
+                            Run Diagnostics
+                        </button>
+                        <button class="w-full px-4 py-2 bg-gray-100 text-gray-700 rounded-lg hover:bg-gray-200">
+                            Calibrate Sensors
+                        </button>
+                        <button class="w-full px-4 py-2 bg-gray-100 text-gray-700 rounded-lg hover:bg-gray-200">
+                            View Error Logs
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Machine Info -->
+                <div class="bg-white p-6 rounded-lg shadow-sm">
+                    <h3 class="font-semibold text-gray-800 mb-4">Machine Information</h3>
+                    <div class="space-y-3">
+                        <div>
+                            <div class="text-sm text-gray-500">Serial Number</div>
+                            <div class="font-medium">WVM-2024-001</div>
+                        </div>
+                        <div>
+                            <div class="text-sm text-gray-500">Installation Date</div>
+                            <div class="font-medium">January 15, 2024</div>
+                        </div>
+                        <div>
+                            <div class="text-sm text-gray-500">Last Maintenance</div>
+                            <div class="font-medium">March 10, 2024</div>
+                        </div>
+                        <div>
+                            <div class="text-sm text-gray-500">Next Service Due</div>
+                            <div class="font-medium text-yellow-600">In 5 days</div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Maintenance Schedule -->
+                <div class="bg-white p-6 rounded-lg shadow-sm">
+                    <h3 class="font-semibold text-gray-800 mb-4">Upcoming Maintenance</h3>
+                    <div class="space-y-3">
+                        <div class="flex items-center justify-between py-2 border-b">
+                            <div>
+                                <div class="text-sm font-medium">Filter Replacement</div>
+                                <div class="text-xs text-gray-500">Due in 5 days</div>
+                            </div>
+                            <button class="px-3 py-1 text-sm text-blue-600 hover:bg-blue-50 rounded">
+                                Schedule
+                            </button>
+                        </div>
+                        <div class="flex items-center justify-between py-2 border-b">
+                            <div>
+                                <div class="text-sm font-medium">System Cleaning</div>
+                                <div class="text-xs text-gray-500">Due in 12 days</div>
+                            </div>
+                            <button class="px-3 py-1 text-sm text-blue-600 hover:bg-blue-50 rounded">
+                                Schedule
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Initialize charts
+        function initializeCharts() {
+            // Mini chart configuration
+            const miniChartConfig = {
+                type: 'line',
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: { legend: { display: false } },
+                    scales: {
+                        y: { display: false },
+                        x: { display: false }
+                    }
+                }
+            };
+
+            // TDS Chart
+            const tdsChart = new Chart(document.getElementById('tdsChart').getContext('2d'), {
+                ...miniChartConfig,
+                data: {
+                    labels: Array(6).fill(''),
+                    datasets: [{
+                        data: [115, 117, 116, 118, 117, 118],
+                        borderColor: 'rgb(59, 130, 246)',
+                        tension: 0.4,
+                        borderWidth: 1.5,
+                        pointRadius: 0
+                    }]
+                }
+            });
+
+            // pH Chart
+            const phChart = new Chart(document.getElementById('phChart').getContext('2d'), {
+                ...miniChartConfig,
+                data: {
+                    labels: Array(6).fill(''),
+                    datasets: [{
+                        data: [7.0, 7.1, 7.1, 7.0, 7.1, 7.1],
+                        borderColor: 'rgb(59, 130, 246)',
+                        tension: 0.4,
+                        borderWidth: 1.5,
+                        pointRadius: 0
+                    }]
+                }
+            });
+
+            // Water Level Chart
+            const waterLevelChart = new Chart(document.getElementById('waterLevelChart').getContext('2d'), {
+                ...miniChartConfig,
+                data: {
+                    labels: Array(6).fill(''),
+                    datasets: [{
+                        data: [95, 93, 91, 89, 88, 87],
+                        borderColor: 'rgb(59, 130, 246)',
+                        tension: 0.4,
+                        borderWidth: 1.5,
+                        pointRadius: 0
+                    }]
+                }
+            });
+
+            // Sales Chart
+            const salesChart = new Chart(document.getElementById('salesChart').getContext('2d'), {
+                ...miniChartConfig,
+                data: {
+                    labels: Array(6).fill(''),
+                    datasets: [{
+                        data: [125, 130, 135, 138, 140, 142],
+                        borderColor: 'rgb(59, 130, 246)',
+                        tension: 0.4,
+                        borderWidth: 1.5,
+                        pointRadius: 0
+                    }]
+                }
+            });
+
+            // Detailed Chart
+            const detailedChart = new Chart(document.getElementById('detailedChart').getContext('2d'), {
+                type: 'line',
+                data: {
+                    labels: ['00:00', '03:00', '06:00', '09:00', '12:00', '15:00', '18:00', '21:00'],
+                    datasets: [{
+                        label: 'TDS (ppm)',
+                        data: [115, 117, 116, 118, 117, 118, 116, 118],
+                        borderColor: 'rgb(59, 130, 246)',
+                        tension: 0.4,
+                        yAxisID: 'y'
+                    }, {
+                        label: 'pH',
+                        data: [7.0, 7.1, 7.1, 7.0, 7.1, 7.1, 7.0, 7.1],
+                        borderColor: 'rgb(234, 88, 12)',
+                        tension: 0.4,
+                        yAxisID: 'y1'
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    interaction: {
+                        mode: 'index',
+                        intersect: false,
+                    },
+                    scales: {
+                        y: {
+                            type: 'linear',
+                            display: true,
+                            position: 'left',
+                            title: {
+                                display: true,
+                                text: 'TDS (ppm)'
+                            }
+                        },
+                        y1: {
+                            type: 'linear',
+                            display: true,
+                            position: 'right',
+                            title: {
+                                display: true,
+                                text: 'pH'
+                            }
+                        }
+                    },
+                    plugins: {
+                        legend: {
+                            position: 'top',
+                            align: 'end'
+                        },
+                        tooltip: {
+                            mode: 'index',
+                            intersect: false
+                        }
+                    }
+                }
+            });
+        }
+
+        // Update data functions
+        function updateChartData(chart, newData) {
+            chart.data.datasets[0].data = newData;
+            chart.update();
+        }
+
+        // Realtime updates simulation
+        function simulateRealtimeUpdates() {
+            setInterval(() => {
+                // Update TDS values
+                const newTDS = 115 + Math.random() * 5;
+                document.querySelector('.tds-value').textContent = `${newTDS.toFixed(1)} ppm`;
+
+                // Update pH values
+                const newPH = 7.0 + Math.random() * 0.2;
+                document.querySelector('.ph-value').textContent = newPH.toFixed(1);
+
+                // Update water level
+                const currentLevel = parseFloat(document.querySelector('.water-level').textContent);
+                const newLevel = Math.max(0, Math.min(100, currentLevel + (Math.random() - 0.5) * 2));
+                document.querySelector('.water-level').textContent = `${newLevel.toFixed(1)}%`;
+
+                // Add new activity log
+                const activities = document.querySelector('.activity-log');
+                const newActivity = document.createElement('div');
+                newActivity.className = 'flex items-center justify-between py-2 border-b';
+                newActivity.innerHTML = `
+                    <div class="flex items-center space-x-3">
+                        <div class="w-2 h-2 rounded-full bg-blue-500"></div>
+                        <div>
+                            <div class="text-sm font-medium">System Update</div>
+                            <div class="text-xs text-gray-500">TDS: ${newTDS.toFixed(1)}ppm, pH: ${newPH.toFixed(1)}</div>
+                        </div>
+                    </div>
+                    <div class="text-sm text-gray-500">Just now</div>
+                `;
+                activities.prepend(newActivity);
+                
+                // Remove oldest activity if more than 5
+                if (activities.children.length > 5) {
+                    activities.removeChild(activities.lastChild);
+                }
+            }, 5000); // Update every 5 seconds
+        }
+
+        // Quick Actions Event Handlers
+        document.addEventListener('DOMContentLoaded', () => {
+            // Run Diagnostics Button
+            document.querySelector('.run-diagnostics').addEventListener('click', () => {
+                const button = event.target;
+                button.disabled = true;
+                button.textContent = 'Running...';
+                
+                setTimeout(() => {
+                    button.disabled = false;
+                    button.textContent = 'Run Diagnostics';
+                    alert('Diagnostics completed successfully!');
+                }, 3000);
+            });
+
+            // Calibrate Sensors Button
+            document.querySelector('.calibrate-sensors').addEventListener('click', () => {
+                if (confirm('Start sensor calibration process? This will take approximately 5 minutes.')) {
+                    const button = event.target;
+                    button.disabled = true;
+                    button.textContent = 'Calibrating...';
+                    
+                    let progress = 0;
+                    const interval = setInterval(() => {
+                        progress += 10;
+                        if (progress >= 100) {
+                            clearInterval(interval);
+                            button.disabled = false;
+                            button.textContent = 'Calibrate Sensors';
+                            alert('Sensor calibration completed!');
+                        }
+                    }, 3000);
+                }
+            });
+
+            // View Error Logs
+            document.querySelector('.view-logs').addEventListener('click', () => {
+                const modal = document.createElement('div');
+                modal.className = 'fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center';
+                modal.innerHTML = `
+                    <div class="bg-white rounded-lg p-6 max-w-2xl w-full mx-4">
+                        <div class="flex justify-between items-center mb-4">
+                            <h3 class="text-lg font-bold">Error Logs</h3>
+                            <button class="text-gray-500 hover:text-gray-700">&times;</button>
+                        </div>
+                        <div class="h-96 overflow-y-auto">
+                            <div class="space-y-2">
+                                <div class="p-2 bg-red-50 rounded">
+                                    <div class="text-red-700 font-medium">Error: Connection Timeout</div>
+                                    <div class="text-red-600 text-sm">2024-03-28 14:23:15</div>
+                                </div>
+                                <div class="p-2 bg-yellow-50 rounded">
+                                    <div class="text-yellow-700 font-medium">Warning: High TDS Level</div>
+                                    <div class="text-yellow-600 text-sm">2024-03-28 13:45:22</div>
+                                </div>
+                                <!-- Add more log entries as needed -->
+                            </div>
+                        </div>
+                        <div class="mt-4 flex justify-end">
+                            <button class="px-4 py-2 bg-gray-200 rounded hover:bg-gray-300">Close</button>
+                        </div>
+                    </div>
+                `;
+                document.body.appendChild(modal);
+                
+                modal.querySelector('button').addEventListener('click', () => {
+                    modal.remove();
+                });
+            });
+        });
+
+        // Initialize everything when page loads
+        window.addEventListener('load', () => {
+            initializeCharts();
+            simulateRealtimeUpdates();
+        });
+    </script>
+</body>
+</html>

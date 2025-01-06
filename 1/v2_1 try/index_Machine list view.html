@@ -1,0 +1,249 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Water Vending Monitor - Machines Status</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/chart.js/3.7.0/chart.min.js"></script>
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-gray-50">
+    <!-- Sidebar -->
+    <div class="fixed inset-y-0 left-0 w-64 bg-white shadow-lg">
+        <div class="flex items-center justify-center h-16 border-b">
+            <h1 class="text-xl font-bold text-blue-600">Water Vending Monitor</h1>
+        </div>
+        <nav class="mt-6">
+            <div class="px-4 py-3 text-gray-600 hover:bg-gray-50 cursor-pointer">
+                <i class="fas fa-home mr-2"></i>Dashboard
+            </div>
+            <div class="px-4 py-3 bg-blue-50 text-blue-700">
+                <i class="fas fa-cube mr-2"></i>Machines
+            </div>
+            <div class="px-4 py-3 text-gray-600 hover:bg-gray-50 cursor-pointer">
+                <i class="fas fa-chart-line mr-2"></i>Analytics
+            </div>
+            <div class="px-4 py-3 text-gray-600 hover:bg-gray-50 cursor-pointer">
+                <i class="fas fa-cog mr-2"></i>Settings
+            </div>
+        </nav>
+    </div>
+
+    <!-- Main Content -->
+    <div class="ml-64 p-8">
+        <!-- Header -->
+        <div class="flex justify-between items-center mb-8">
+            <div>
+                <h2 class="text-2xl font-bold text-gray-800">Machines Status</h2>
+                <p class="text-gray-500">Real-time monitoring of all vending machines</p>
+            </div>
+            <div class="flex space-x-4">
+                <div class="relative">
+                    <input type="text" placeholder="Search machines..." class="pl-10 pr-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500">
+                    <svg class="w-5 h-5 absolute left-3 top-2.5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+                    </svg>
+                </div>
+                <select class="px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500">
+                    <option>All Status</option>
+                    <option>Online</option>
+                    <option>Offline</option>
+                    <option>Warning</option>
+                </select>
+                <button class="px-4 py-2 bg-gray-200 text-gray-700 rounded-lg hover:bg-gray-300">
+                    Refresh
+                </button>
+            </div>
+        </div>
+
+        <!-- Machines List -->
+        <div class="space-y-4">
+            <!-- Machine Row -->
+            <div class="bg-white rounded-lg shadow-sm hover:shadow-md transition-shadow p-4">
+                <div class="flex items-center justify-between">
+                    <!-- Left Section: Basic Info -->
+                    <div class="flex items-center space-x-4 w-1/4">
+                        <div class="w-2 h-2 rounded-full bg-green-500"></div>
+                        <div>
+                            <h3 class="font-semibold text-gray-800">Vending #1</h3>
+                            <p class="text-sm text-gray-500">Location A</p>
+                        </div>
+                    </div>
+
+                    <!-- Middle Section: Metrics -->
+                    <div class="flex space-x-8 w-2/4">
+                        <div>
+                            <div class="text-sm text-gray-500">TDS</div>
+                            <div class="font-semibold">118 ppm</div>
+                        </div>
+                        <div>
+                            <div class="text-sm text-gray-500">pH</div>
+                            <div class="font-semibold">7.1</div>
+                        </div>
+                        <div>
+                            <div class="text-sm text-gray-500">Water Level</div>
+                            <div class="font-semibold">87%</div>
+                        </div>
+                        <div>
+                            <div class="text-sm text-gray-500">Today's Sales</div>
+                            <div class="font-semibold">142</div>
+                        </div>
+                    </div>
+
+                    <!-- Right Section: Quick Actions -->
+                    <div class="flex items-center space-x-4 w-1/4 justify-end">
+                        <div class="h-12 w-24">
+                            <canvas id="miniChart1"></canvas>
+                        </div>
+                        <button class="p-2 text-blue-600 hover:bg-blue-50 rounded-lg">
+                            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
+                            </svg>
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Warning State Machine -->
+            <div class="bg-white rounded-lg shadow-sm hover:shadow-md transition-shadow p-4">
+                <div class="flex items-center justify-between">
+                    <div class="flex items-center space-x-4 w-1/4">
+                        <div class="w-2 h-2 rounded-full bg-yellow-500"></div>
+                        <div>
+                            <h3 class="font-semibold text-gray-800">Vending #2</h3>
+                            <p class="text-sm text-gray-500">Location B</p>
+                        </div>
+                    </div>
+                    <div class="flex space-x-8 w-2/4">
+                        <div>
+                            <div class="text-sm text-gray-500">TDS</div>
+                            <div class="font-semibold text-yellow-600">145 ppm</div>
+                        </div>
+                        <div>
+                            <div class="text-sm text-gray-500">pH</div>
+                            <div class="font-semibold">7.2</div>
+                        </div>
+                        <div>
+                            <div class="text-sm text-gray-500">Water Level</div>
+                            <div class="font-semibold text-yellow-600">23%</div>
+                        </div>
+                        <div>
+                            <div class="text-sm text-gray-500">Today's Sales</div>
+                            <div class="font-semibold">98</div>
+                        </div>
+                    </div>
+                    <div class="flex items-center space-x-4 w-1/4 justify-end">
+                        <div class="h-12 w-24">
+                            <canvas id="miniChart2"></canvas>
+                        </div>
+                        <button class="p-2 text-blue-600 hover:bg-blue-50 rounded-lg">
+                            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
+                            </svg>
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Offline State Machine -->
+            <div class="bg-white rounded-lg shadow-sm hover:shadow-md transition-shadow p-4">
+                <div class="flex items-center justify-between">
+                    <div class="flex items-center space-x-4 w-1/4">
+                        <div class="w-2 h-2 rounded-full bg-red-500"></div>
+                        <div>
+                            <h3 class="font-semibold text-gray-800">Vending #3</h3>
+                            <p class="text-sm text-gray-500">Location C</p>
+                        </div>
+                    </div>
+                    <div class="flex space-x-8 w-2/4">
+                        <div>
+                            <div class="text-sm text-gray-500">TDS</div>
+                            <div class="font-semibold text-gray-400">-- ppm</div>
+                        </div>
+                        <div>
+                            <div class="text-sm text-gray-500">pH</div>
+                            <div class="font-semibold text-gray-400">--</div>
+                        </div>
+                        <div>
+                            <div class="text-sm text-gray-500">Water Level</div>
+                            <div class="font-semibold text-gray-400">--</div>
+                        </div>
+                        <div>
+                            <div class="text-sm text-gray-500">Today's Sales</div>
+                            <div class="font-semibold">45</div>
+                        </div>
+                    </div>
+                    <div class="flex items-center space-x-4 w-1/4 justify-end">
+                        <span class="text-sm text-red-500">Offline for 15m</span>
+                        <button class="p-2 text-blue-600 hover:bg-blue-50 rounded-lg">
+                            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
+                            </svg>
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Pagination -->
+        <div class="mt-6 flex justify-between items-center">
+            <div class="text-gray-500 text-sm">
+                Showing 1-3 of 18 machines
+            </div>
+            <div class="flex space-x-2">
+                <button class="px-4 py-2 border rounded-lg text-gray-500 hover:bg-gray-50">Previous</button>
+                <button class="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700">1</button>
+                <button class="px-4 py-2 border rounded-lg text-gray-500 hover:bg-gray-50">2</button>
+                <button class="px-4 py-2 border rounded-lg text-gray-500 hover:bg-gray-50">3</button>
+                <button class="px-4 py-2 border rounded-lg text-gray-500 hover:bg-gray-50">Next</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Initialize mini charts
+        function initializeMiniChart(elementId) {
+            const ctx = document.getElementById(elementId).getContext('2d');
+            return new Chart(ctx, {
+                type: 'line',
+                data: {
+                    labels: ['', '', '', '', '', ''],
+                    datasets: [{
+                        data: [65, 68, 67, 65, 66, 68],
+                        borderColor: 'rgb(59, 130, 246)',
+                        tension: 0.4,
+                        borderWidth: 1.5,
+                        pointRadius: 0
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: {
+                            display: false
+                        }
+                    },
+                    scales: {
+                        y: {
+                            display: false
+                        },
+                        x: {
+                            display: false
+                        }
+                    }
+                }
+            });
+        }
+
+        // Initialize charts when page loads
+        window.addEventListener('load', () => {
+            initializeMiniChart('miniChart1');
+            initializeMiniChart('miniChart2');
+        });
+    </script>
+</body>
+</html>

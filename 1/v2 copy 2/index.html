@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard Water Vending</title>
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Chart.js CDN -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body class="flex h-screen bg-gray-100">
+    <!-- Sidebar -->
+    <aside class="w-64 bg-white shadow-md">
+        <div class="p-4">
+            <h1 class="text-2xl font-bold text-center">Water Vending</h1>
+        </div>
+        <nav class="mt-10">
+            <a href="#" class="flex items-center py-2 px-8 text-gray-700 hover:bg-gray-200">
+                <svg class="w-6 h-6 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"/>
+                </svg>
+                <span>Dashboard</span>
+            </a>
+            <a href="#" class="flex items-center py-2 px-8 text-gray-700 hover:bg-gray-200">
+                <svg class="w-6 h-6 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 17v-2a4 4 0 014-4h1m6-3h2a2 2 0 012 2v6a2 2 0 01-2 2h-2m-6 0h-1a4 4 0 00-4 4v2m0-16v2a4 4 0 004 4h1a4 4 0 004-4V5a4 4 0 00-4-4z"/>
+                </svg>
+                <span>Monitoring</span>
+            </a>
+            <a href="#" class="flex items-center py-2 px-8 text-gray-700 hover:bg-gray-200">
+                <svg class="w-6 h-6 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/>
+                </svg>
+                <span>Manajemen Mesin</span>
+            </a>
+            <a href="#" class="flex items-center py-2 px-8 text-gray-700 hover:bg-gray-200">
+                <svg class="w-6 h-6 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 7v10a2 2 0 002 2h14a2 2 0 002-2V7M16 3h-8a2 2 0 00-2 2v0a2 2 0 002 2h8a2 2 0 002-2V5a2 2 0 00-2-2z"/>
+                </svg>
+                <span>Transaksi</span>
+            </a>
+            <a href="#" class="flex items-center py-2 px-8 text-gray-700 hover:bg-gray-200">
+                <svg class="w-6 h-6 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 17l-5-5m0 0l5-5m-5 5h12"/>
+                </svg>
+                <span>Analitik</span>
+            </a>
+            <a href="#" class="flex items-center py-2 px-8 text-gray-700 hover:bg-gray-200">
+                <svg class="w-6 h-6 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 11c0 1.105-.895 2-2 2s-2-.895-2-2 .895-2 2-2 2 .895 2 2zm0 0c0 1.105.895 2 2 2s2-.895 2-2-.895-2-2-2-2 .895-2 2zm0 0c0 1.105-.895 2-2 2s-2-.895-2-2 .895-2 2-2 2 .895 2 2z"/>
+                </svg>
+                <span>Pengaturan</span>
+            </a>
+        </nav>
+    </aside>
+
+    <!-- Main Content -->
+    <div class="flex-1 flex flex-col">
+        <!-- Header -->
+        <header class="flex items-center justify-between bg-white p-4 shadow-md">
+            <div class="flex items-center">
+                <h2 class="text-xl font-semibold">Dashboard</h2>
+            </div>
+            <div class="flex items-center space-x-4">
+                <div class="relative">
+                    <button id="notificationButton" class="flex text-gray-700 focus:outline-none">
+                        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6 6 0 00-5-5.917V5a2 2 0 10-4 0v.083A6 6 0 006 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9"/>
+                        </svg>
+                        <!-- Notification Badge -->
+                        <span class="absolute top-0 right-0 inline-flex items-center justify-center px-2 py-1 text-xs font-bold leading-none text-red-100 bg-red-600 rounded-full">3</span>
+                    </button>
+                    <!-- Notification Dropdown -->
+                    <div id="notificationDropdown" class="hidden absolute right-0 mt-2 w-48 bg-white border rounded-md shadow-lg">
+                        <a href="#" class="block px-4 py-2 text-gray-800 hover:bg-gray-200">Notifikasi 1</a>
+                        <a href="#" class="block px-4 py-2 text-gray-800 hover:bg-gray-200">Notifikasi 2</a>
+                        <a href="#" class="block px-4 py-2 text-gray-800 hover:bg-gray-200">Notifikasi 3</a>
+                    </div>
+                </div>
+                <div class="flex items-center">
+                    <img src="https://via.placeholder.com/32" alt="User Avatar" class="w-8 h-8 rounded-full">
+                    <span class="ml-2">Admin</span>
+                </div>
+            </div>
+        </header>
+
+        <!-- Content Area -->
+        <main class="flex-1 p-6 overflow-y-auto">
+            <h3 class="text-lg font-semibold mb-4">Selamat Datang di Dashboard Water Vending!</h3>
+            <!-- Konten awal bisa ditambahkan di sini -->
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                <!-- Card 1 -->
+                <div class="bg-white p-4 rounded-lg shadow">
+                    <h4 class="text-md font-semibold">Total Mesin Vending</h4>
+                    <p class="text-2xl mt-2">10</p>
+                </div>
+                <!-- Card 2 -->
+                <div class="bg-white p-4 rounded-lg shadow">
+                    <h4 class="text-md font-semibold">Status Mesin Aktif</h4>
+                    <p class="text-2xl mt-2">8</p>
+                </div>
+                <!-- Card 3 -->
+                <div class="bg-white p-4 rounded-lg shadow">
+                    <h4 class="text-md font-semibold">Rata-rata TDS</h4>
+                    <p class="text-2xl mt-2">350 ppm</p>
+                </div>
+                <!-- Card 4 -->
+                <div class="bg-white p-4 rounded-lg shadow">
+                    <h4 class="text-md font-semibold">Rata-rata pH</h4>
+                    <p class="text-2xl mt-2">7.2</p>
+                </div>
+                <!-- Card 5 -->
+                <div class="bg-white p-4 rounded-lg shadow">
+                    <h4 class="text-md font-semibold">Transaksi Hari Ini</h4>
+                    <p class="text-2xl mt-2">150</p>
+                </div>
+                <!-- Card 6 -->
+                <div class="bg-white p-4 rounded-lg shadow">
+                    <h4 class="text-md font-semibold">Notifikasi Terbaru</h4>
+                    <ul class="list-disc list-inside">
+                        <li>Vending-3 pH turun di bawah batas normal</li>
+                        <li>Vending-7 memerlukan pemeliharaan</li>
+                        <li>Vending-2 TDS meningkat</li>
+                    </ul>
+                </div>
+            </div>
+
+            <!-- Bagian Monitoring Kualitas Air -->
+            <div class="mt-10">
+                <h3 class="text-lg font-semibold mb-4">Monitoring Kualitas Air</h3>
+                <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                    <!-- Grafik TDS -->
+                    <div class="bg-white p-4 rounded-lg shadow">
+                        <h4 class="text-md font-semibold mb-2">Grafik TDS</h4>
+                        <canvas id="tdsChart" width="400" height="200"></canvas>
+                    </div>
+                    <!-- Grafik pH -->
+                    <div class="bg-white p-4 rounded-lg shadow">
+                        <h4 class="text-md font-semibold mb-2">Grafik pH</h4>
+                        <canvas id="phChart" width="400" height="200"></canvas>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <!-- JavaScript -->
+    <script src="script.js"></script>
+</body>
+</html>

@@ -1,0 +1,230 @@
+#include <WiFi.h>
+#include <WebServer.h>
+#include <EEPROM.h>
+#include "GravityTDS.h"
+
+// WiFi Configuration
+const char* WIFI_SSID = "haisayakaka";     // Replace with your WiFi SSID
+const char* WIFI_PASSWORD = "akujomok";  // Replace with your WiFi password
+
+// Server Configuration
+WebServer server(80);
+
+// Pin Configuration
+const int PH_PIN = 36;         // GPIO36 (VP) for pH analog input
+const int TDS_PIN = 25;        // GPIO25 for TDS sensor
+const int EEPROM_SIZE = 512;   // EEPROM size for TDS calibration
+
+// Sampling Configuration
+const int SAMPLES = 10;        // Number of samples for average reading
+const int SAMPLE_INTERVAL = 10; // Delay between samples in ms
+const int READ_INTERVAL = 1000; // Interval between sensor readings in ms
+
+// pH Sensor Calibration Constants
+const float VOLTAGE_REF = 3.3;  // ESP32 voltage reference
+const float PH7_VOLTAGE = 2.5;  // Voltage at pH 7 (needs calibration)
+const float PH4_VOLTAGE = 3.0;  // Voltage at pH 4 (needs calibration)
+const float VOLTAGE_PER_PH = (PH4_VOLTAGE - PH7_VOLTAGE) / 3.0;
+
+// TDS Configuration
+GravityTDS gravityTds;
+float temperature = 25.0;  // Default temperature for TDS compensation
+
+// Global variables for sensor readings
+struct SensorData {
+    float phVoltage;
+    float phValue;
+    float tdsValue;
+    bool isValid;
+} sensorData;
+
+// WiFi Connection Function with timeout
+bool connectWiFi() {
+    Serial.println(F("\nConnecting to WiFi"));
+    Serial.print(F("SSID: "));
+    Serial.println(WIFI_SSID);
+    
+    WiFi.mode(WIFI_STA);
+    WiFi.begin(WIFI_SSID, WIFI_PASSWORD);
+    
+    int attempts = 0;
+    while (WiFi.status() != WL_CONNECTED && attempts < 20) {
+        delay(500);
+        Serial.print(".");
+        attempts++;
+    }
+    
+    if (WiFi.status() == WL_CONNECTED) {
+        Serial.println(F("\nWiFi Connected!"));
+        Serial.print(F("IP Address: "));
+        Serial.println(WiFi.localIP());
+        return true;
+    } else {
+        Serial.println(F("\nWiFi Connection Failed!"));
+        return false;
+    }
+}
+
+void setupTDSSensor() {
+    gravityTds.setPin(TDS_PIN);
+    gravityTds.setAref(VOLTAGE_REF);
+    gravityTds.setAdcRange(4096);  // 12-bit ADC
+    gravityTds.begin();
+}
+
+float readPHVoltage() {
+    int samples[SAMPLES];
+    
+    // Collect samples
+    for (int i = 0; i < SAMPLES; i++) {
+        samples[i] = analogRead(PH_PIN);
+        delay(SAMPLE_INTERVAL);
+    }
+    
+    // Apply median filtering
+    for (int i = 0; i < SAMPLES - 1; i++) {
+        for (int j = i + 1; j < SAMPLES; j++) {
+            if (samples[i] > samples[j]) {
+                int temp = samples[i];
+                samples[i] = samples[j];
+                samples[j] = temp;
+            }
+        }
+    }
+    
+    // Calculate average excluding 2 highest and 2 lowest values
+    float avgValue = 0;
+    for (int i = 2; i < SAMPLES - 2; i++) {
+        avgValue += samples[i];
+    }
+    
+    // Convert to voltage
+    return (avgValue / (SAMPLES - 4)) * (VOLTAGE_REF / 4095.0);
+}
+
+float voltageToPH(float voltage) {
+    return 7.0 + ((PH7_VOLTAGE - voltage) / VOLTAGE_PER_PH);
+}
+
+void updateSensorReadings() {
+    // Read pH
+    sensorData.phVoltage = readPHVoltage();
+    sensorData.phValue = voltageToPH(sensorData.phVoltage);
+    
+    // Read TDS
+    gravityTds.setTemperature(temperature);
+    gravityTds.update();
+    sensorData.tdsValue = gravityTds.getTdsValue();
+    
+    // Validate readings
+    sensorData.isValid = (sensorData.phValue >= 0 && sensorData.phValue <= 14);
+}
+
+const char* getPHStatus(float pH) {
+    if (pH < 6.5) return "Acidic";
+    if (pH > 7.5) return "Basic";
+    return "Neutral";
+}
+
+// Web Server Handlers
+void handleTerima() {
+    String response = "{";
+    response += "\"status\":\"" + String(sensorData.isValid ? "success" : "error") + "\",";
+    response += "\"data\":{";
+    response += "\"ph_voltage\":" + String(sensorData.phVoltage, 3) + ",";
+    response += "\"ph_value\":" + String(sensorData.phValue, 2) + ",";
+    response += "\"ph_status\":\"" + String(getPHStatus(sensorData.phValue)) + "\",";
+    response += "\"tds_value\":" + String(sensorData.tdsValue, 0) + ",";
+    response += "\"temperature\":" + String(temperature, 1);
+    response += "}}";
+    
+    server.send(200, "application/json", response);
+}
+
+void handleNotFound() {
+    server.send(404, "text/plain", "Not Found");
+}
+
+void setupWebServer() {
+    server.on("/terima", HTTP_GET, handleTerima);
+    server.onNotFound(handleNotFound);
+    server.begin();
+    Serial.println(F("HTTP server started"));
+}
+
+void printReadings() {
+    Serial.println(F("\n=== Water Quality Readings ==="));
+    
+    // Print pH information
+    Serial.print(F("pH Voltage: "));
+    Serial.print(sensorData.phVoltage, 3);
+    Serial.println(F(" V"));
+    
+    if (sensorData.isValid) {
+        Serial.print(F("pH Value: "));
+        Serial.println(sensorData.phValue, 2);
+        Serial.print(F("pH Status: "));
+        Serial.println(getPHStatus(sensorData.phValue));
+    } else {
+        Serial.println(F("Error: Invalid pH reading!"));
+        Serial.println(F("Check sensor connection and calibration"));
+    }
+    
+    // Print TDS information
+    Serial.print(F("TDS Value: "));
+    Serial.print(sensorData.tdsValue, 0);
+    Serial.println(F(" ppm"));
+    
+    Serial.print(F("Temperature: "));
+    Serial.print(temperature, 1);
+    Serial.println(F("°C"));
+}
+
+void setup() {
+    // Initialize Serial communication
+    Serial.begin(115200);
+    while (!Serial) {
+        delay(10);
+    }
+    
+    Serial.println(F("\nESP32 Water Quality Monitor"));
+    Serial.println(F("-------------------------"));
+    
+    // Initialize EEPROM for TDS sensor
+    EEPROM.begin(EEPROM_SIZE);
+    
+    // Configure ADC for pH sensor
+    analogSetWidth(12);           // Set ADC to 12-bit resolution
+    analogSetAttenuation(ADC_11db); // Set attenuation for 0-3.3V range
+    
+    // Initialize TDS sensor
+    setupTDSSensor();
+    
+    // Connect to WiFi
+    if (connectWiFi()) {
+        // Setup Web Server
+        setupWebServer();
+    } else {
+        Serial.println(F("System will continue without WiFi"));
+    }
+    
+    // Wait for sensors to stabilize
+    delay(2000);
+}
+
+void loop() {
+    static unsigned long lastReadTime = 0;
+    
+    // Handle Web Server
+    server.handleClient();
+    
+    // Update readings at specified interval
+    if (millis() - lastReadTime >= READ_INTERVAL) {
+        updateSensorReadings();
+        printReadings();
+        lastReadTime = millis();
+    }
+    
+    // Small delay to prevent WDT reset
+    delay(2);
+}

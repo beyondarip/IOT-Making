@@ -1,0 +1,36 @@
+2024-12-12 20:23:45,055 - CRITICAL - Application failed to start: 'WaterVendingMachine' object has no attribute 'restore_geometry'
+2024-12-12 20:23:45,055 - ERROR - Uncaught exception
+Traceback (most recent call last):
+  File "d:\Extras\resources\[Collage]\Asisten\IOT AIR\main copy.py", line 374, in <module>
+    window = WaterVendingMachine()
+             ^^^^^^^^^^^^^^^^^^^^^
+  File "d:\Extras\resources\[Collage]\Asisten\IOT AIR\main copy.py", line 230, in __init__
+    self.load_settings()
+  File "d:\Extras\resources\[Collage]\Asisten\IOT AIR\main copy.py", line 259, in load_settings
+    self.restore_geometry()
+    ^^^^^^^^^^^^^^^^^^^^^
+AttributeError: 'WaterVendingMachine' object has no attribute 'restore_geometry'. Did you mean: 'restoreGeometry'?
+2024-12-12 20:29:51,107 - CRITICAL - Application failed to start: 'WaterVendingMachine' object has no attribute 'restore_geometry'
+2024-12-12 20:29:51,107 - ERROR - Uncaught exception
+Traceback (most recent call last):
+  File "d:\Extras\resources\[Collage]\Asisten\IOT AIR\main copy.py", line 572, in <module>
+    window = WaterVendingMachine()
+             ^^^^^^^^^^^^^^^^^^^^^
+  File "d:\Extras\resources\[Collage]\Asisten\IOT AIR\main copy.py", line 167, in __init__
+    self.load_settings()
+  File "d:\Extras\resources\[Collage]\Asisten\IOT AIR\main copy.py", line 194, in load_settings
+    self.restore_geometry()
+    ^^^^^^^^^^^^^^^^^^^^^
+AttributeError: 'WaterVendingMachine' object has no attribute 'restore_geometry'. Did you mean: 'restoreGeometry'?
+2024-12-12 20:33:19,288 - CRITICAL - Application failed to start: 'WaterVendingMachine' object has no attribute 'restore_geometry'
+2024-12-12 20:33:19,288 - ERROR - Uncaught exception
+Traceback (most recent call last):
+  File "d:\Extras\resources\[Collage]\Asisten\IOT AIR\main copy.py", line 573, in <module>
+    window = WaterVendingMachine()
+             ^^^^^^^^^^^^^^^^^^^^^
+  File "d:\Extras\resources\[Collage]\Asisten\IOT AIR\main copy.py", line 168, in __init__
+    self.load_settings()
+  File "d:\Extras\resources\[Collage]\Asisten\IOT AIR\main copy.py", line 195, in load_settings
+    self.restore_geometry()
+    ^^^^^^^^^^^^^^^^^^^^^
+AttributeError: 'WaterVendingMachine' object has no attribute 'restore_geometry'. Did you mean: 'restoreGeometry'?

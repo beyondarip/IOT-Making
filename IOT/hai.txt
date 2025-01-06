@@ -1,0 +1,233 @@
+import sys
+import math
+import time
+import board
+import busio
+import RPi.GPIO as GPIO
+import adafruit_ads1x15.ads1115 as ADS
+from adafruit_ads1x15.analog_in import AnalogIn
+from PyQt5.QtWidgets import *
+from PyQt5.QtCore import *
+from PyQt5.QtGui import *
+import threading
+import logging
+
+# Keep existing configurations and logging setup
+logging.basicConfig(
+    level=logging.INFO,
+    format="%(asctime)s [%(levelname)s] %(message)s",
+    handlers=[
+        logging.FileHandler("vending_machine.log"),
+        logging.StreamHandler()
+    ]
+)
+
+# Keep existing GPIO and TDS configurations
+FLOW_SENSOR_PIN = 20
+MOTOR_PIN = 21
+TARGET_PULSES = {
+    '300 ML\n(Regular)': 325,
+    '600 ML\n(Medium)': 670,
+    '1.5 L\n(Large)': 4500
+}
+
+VREF = 5.0
+TDS_FACTOR = 0.5
+TEMPERATURE = 25.0
+
+# Loading Screen
+class LoadingScreen(QWidget):
+    def __init__(self):
+        super().__init__()
+        self.setWindowFlag(Qt.FramelessWindowHint)
+        self.setAttribute(Qt.WA_TranslucentBackground)
+        self.resize(200, 200)
+        
+        self.angle = 0
+        self.timer = QTimer()
+        self.timer.timeout.connect(self.rotate)
+        self.timer.start(30)
+
+    def rotate(self):
+        self.angle = (self.angle + 10) % 360
+        self.update()
+
+    def paintEvent(self, event):
+        painter = QPainter(self)
+        painter.setRenderHint(QPainter.Antialiasing)
+        
+        # Draw loading circle
+        pen = QPen(QColor("#2ecc71"), 4)
+        painter.setPen(pen)
+        
+        rect = QRect(10, 10, 180, 180)
+        painter.translate(rect.center())
+        painter.rotate(self.angle)
+        painter.translate(-rect.center())
+        painter.drawArc(rect, 0 * 16, 300 * 16)
+
+class FloatingButton(QPushButton):
+    def __init__(self, parent=None):
+        super().__init__(parent)
+        self.setFixedSize(56, 56)
+        self.setStyleSheet("""
+            QPushButton {
+                background-color: #2ecc71;
+                border-radius: 28px;
+                color: white;
+            }
+            QPushButton:hover {
+                background-color: #27ae60;
+            }
+        """)
+        
+        # Shadow effect
+        shadow = QGraphicsDropShadowEffect(self)
+        shadow.setBlurRadius(15)
+        shadow.setOffset(0, 4)
+        shadow.setColor(QColor(0, 0, 0, 80))
+        self.setGraphicsEffect(shadow)
+
+class ModernSidebar(QWidget):
+    def __init__(self, parent=None):
+        super().__init__(parent)
+        self.setFixedWidth(250)
+        self.setStyleSheet("""
+            QWidget {
+                background-color: #2c3e50;
+                color: white;
+            }
+        """)
+        
+        layout = QVBoxLayout(self)
+        layout.setContentsMargins(0, 0, 0, 0)
+        
+        # Add menu items
+        menu_items = ["Dashboard", "Settings", "Statistics", "Help"]
+        for item in menu_items:
+            btn = QPushButton(item)
+            btn.setStyleSheet("""
+                QPushButton {
+                    text-align: left;
+                    padding: 15px;
+                    border: none;
+                    font-size: 16px;
+                }
+                QPushButton:hover {
+                    background-color: #34495e;
+                }
+            """)
+            layout.addWidget(btn)
+            
+        layout.addStretch()
+
+# Enhance existing classes with modern styling
+class ModernCircularButton(CircularButton):
+    def __init__(self, text, size=180):
+        super().__init__(text, size)
+        self.hover_animation = QPropertyAnimation(self, b"hover_value")
+        self.hover_animation.setDuration(200)
+        self.hover_value = 0
+
+    def enterEvent(self, event):
+        self.hover_animation.setStartValue(0)
+        self.hover_animation.setEndValue(1)
+        self.hover_animation.start()
+
+    def leaveEvent(self, event):
+        self.hover_animation.setStartValue(1)
+        self.hover_animation.setEndValue(0)
+        self.hover_animation.start()
+
+class ModernVendingMachine(VendingMachine):
+    def __init__(self):
+        super().__init__()
+        self.initModernUI()
+
+    def initModernUI(self):
+        # Create main layout with sidebar
+        main_widget = QWidget()
+        self.setCentralWidget(main_widget)
+        main_layout = QHBoxLayout(main_widget)
+        main_layout.setSpacing(0)
+        main_layout.setContentsMargins(0, 0, 0, 0)
+
+        # Add sidebar
+        self.sidebar = ModernSidebar()
+        main_layout.addWidget(self.sidebar)
+
+        # Content area
+        content_widget = QWidget()
+        content_layout = QVBoxLayout(content_widget)
+        content_layout.setContentsMargins(40, 40, 40, 40)
+        main_layout.addWidget(content_widget)
+
+        # Add floating scroll to top button
+        self.scroll_button = FloatingButton(self)
+        self.scroll_button.setIcon(QIcon.fromTheme("go-top"))
+        self.scroll_button.clicked.connect(self.scroll_to_top)
+        self.scroll_button.hide()
+
+        # Loading screen
+        self.loading_screen = LoadingScreen()
+        self.loading_screen.move(
+            self.geometry().center() - self.loading_screen.rect().center()
+        )
+
+        # Apply modern styling
+        self.setStyleSheet("""
+            QMainWindow {
+                background: qlineargradient(x1:0, y1:0, x2:1, y2:1,
+                    stop:0 #2c3e50, stop:1 #3498db);
+            }
+            QScrollBar:vertical {
+                border: none;
+                background: #2c3e50;
+                width: 10px;
+                margin: 0;
+            }
+            QScrollBar::handle:vertical {
+                background: #3498db;
+                min-height: 20px;
+                border-radius: 5px;
+            }
+            QScrollBar::add-line:vertical, QScrollBar::sub-line:vertical {
+                height: 0;
+            }
+        """)
+
+    def show_loading_screen(self):
+        self.loading_screen.show()
+        QTimer.singleShot(2000, self.loading_screen.hide)
+
+    def scroll_to_top(self):
+        scroll_animation = QPropertyAnimation(self.verticalScrollBar(), b"value")
+        scroll_animation.setDuration(500)
+        scroll_animation.setStartValue(self.verticalScrollBar().value())
+        scroll_animation.setEndValue(0)
+        scroll_animation.setEasingCurve(QEasingCurve.OutCubic)
+        scroll_animation.start()
+
+    def showEvent(self, event):
+        super().showEvent(event)
+        self.show_loading_screen()
+
+if __name__ == '__main__':
+    try:
+        app = QApplication(sys.argv)
+        app.setStyle('Fusion')
+        
+        # Enable High DPI scaling
+        app.setAttribute(Qt.AA_EnableHighDpiScaling)
+        app.setAttribute(Qt.AA_UseHighDpiPixmaps)
+        
+        vending_machine = ModernVendingMachine()
+        vending_machine.show()
+        sys.exit(app.exec_())
+    except KeyboardInterrupt:
+        GPIO.output(MOTOR_PIN, GPIO.LOW)
+        GPIO.cleanup()
+        logging.info("Program interrupted by user. Motor stopped and GPIO cleaned up.")
+    except Exception as e:
+        logging.error(f"Application error: {e}")
+        GPIO.cleanup()

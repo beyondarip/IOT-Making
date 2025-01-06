@@ -1,0 +1,177 @@
+// Pin Configurations and Constants
+const int PH_PIN = 36;         // GPIO36 (VP) for pH analog input
+const int TdsSensorPin = 25;   // GPIO25 for TDS analog input
+
+// pH Constants
+const int SAMPLES = 10;        // Number of samples for pH average reading
+const float VOLTAGE_REF = 3.3 - 0.1; // ESP32 voltage reference for pH
+const float PH7_VOLTAGE = 2.5; // Voltage at pH 7 (needs calibration)
+const float PH4_VOLTAGE = 3.0; // Voltage at pH 4 (needs calibration)
+const float VOLTAGE_PER_PH = (PH4_VOLTAGE - PH7_VOLTAGE) / 3; // Voltage per pH unit
+
+// TDS Constants
+#define VREF 3.3      // ADC reference voltage for TDS
+#define SCOUNT 30     // Sum of sample points for TDS
+
+// Variables for pH reading
+float avgVoltage = 0.0;
+float phValue = 0.0;
+
+// Variables for TDS reading
+int analogBuffer[SCOUNT];     // Store the analog values in the array
+int analogBufferTemp[SCOUNT];
+int analogBufferIndex = 0;
+int copyIndex = 0;
+float tdsAverageVoltage = 0;
+float tdsValue = 0;
+float temperature = 25;       // Current temperature for compensation
+
+// Median filtering algorithm for TDS
+int getMedianNum(int bArray[], int iFilterLen) {
+    int bTab[iFilterLen];
+    for (byte i = 0; i < iFilterLen; i++)
+        bTab[i] = bArray[i];
+    int i, j, bTemp;
+    for (j = 0; j < iFilterLen - 1; j++) {
+        for (i = 0; i < iFilterLen - j - 1; i++) {
+            if (bTab[i] > bTab[i + 1]) {
+                bTemp = bTab[i];
+                bTab[i] = bTab[i + 1];
+                bTab[i + 1] = bTemp;
+            }
+        }
+    }
+    if ((iFilterLen & 1) > 0)
+        bTemp = bTab[(iFilterLen - 1) / 2];
+    else
+        bTemp = (bTab[iFilterLen / 2] + bTab[iFilterLen / 2 - 1]) / 2;
+    return bTemp;
+}
+
+// Function to read and filter pH voltage
+float readPHVoltage() {
+    float voltage = 0.0;
+    int samples[SAMPLES];
+    
+    // Take samples
+    for(int i = 0; i < SAMPLES; i++) {
+        samples[i] = analogRead(PH_PIN);
+        delay(10);
+    }
+    
+    // Sort samples for median filtering
+    for(int i = 0; i < SAMPLES-1; i++) {
+        for(int j = i+1; j < SAMPLES; j++) {
+            if(samples[i] > samples[j]) {
+                int temp = samples[i];
+                samples[i] = samples[j];
+                samples[j] = temp;
+            }
+        }
+    }
+    
+    // Discard 2 highest and lowest values
+    int validSamples = SAMPLES - 4;
+    float avgValue = 0;
+    for(int i = 2; i < SAMPLES-2; i++) {
+        avgValue += samples[i];
+    }
+    
+    // Calculate average and convert to voltage
+    voltage = (avgValue / validSamples) * (VOLTAGE_REF / 4095.0);
+    return voltage;
+}
+
+// Function to convert voltage to pH value
+float voltageToPH(float voltage) {
+    return 7.0 + ((PH7_VOLTAGE - voltage) / VOLTAGE_PER_PH);
+}
+
+void setup() {
+    Serial.begin(115200);
+    while (!Serial) {
+        ; // Wait for serial connection
+    }
+    
+    // Configure ADC
+    analogReadResolution(12);      // Set ADC to 12-bit (0-4095)
+    analogSetAttenuation(ADC_11db); // Set attenuation for 3.3V range
+    
+    // Configure pins
+    pinMode(TdsSensorPin, INPUT);
+    
+    // Initialization message
+    Serial.println("\nInitializing pH and TDS Sensors on ESP32");
+    Serial.println("----------------------------------------");
+    
+    // Wait for sensors to stabilize
+    delay(2000);
+}
+
+void loop() {
+    // TDS Reading Section
+    static unsigned long analogSampleTimepoint = millis();
+    if(millis() - analogSampleTimepoint > 40U) {
+        analogSampleTimepoint = millis();
+        analogBuffer[analogBufferIndex] = analogRead(TdsSensorPin);
+        analogBufferIndex++;
+        if(analogBufferIndex == SCOUNT) 
+            analogBufferIndex = 0;
+    }
+    
+    // pH and TDS Print Section
+    static unsigned long printTimepoint = millis();
+    if(millis() - printTimepoint > 800U) {
+        printTimepoint = millis();
+        
+        // Process TDS readings
+        for(copyIndex = 0; copyIndex < SCOUNT; copyIndex++)
+            analogBufferTemp[copyIndex] = analogBuffer[copyIndex];
+        
+        int medianValue = getMedianNum(analogBufferTemp, SCOUNT);
+        tdsAverageVoltage = medianValue * (float)VREF / 4096.0;
+        
+        float compensationCoefficient = 1.0 + 0.02 * (temperature - 25.0);
+        float compensationVoltage = tdsAverageVoltage / compensationCoefficient;
+        
+        tdsValue = (133.42 * compensationVoltage * compensationVoltage * compensationVoltage 
+                    - 255.86 * compensationVoltage * compensationVoltage 
+                    + 857.39 * compensationVoltage) * 0.5;
+        
+        // Process pH readings
+        avgVoltage = readPHVoltage();
+        phValue = voltageToPH(avgVoltage);
+        
+        // Print combined results
+        Serial.println("\n=== Sensor Readings ===");
+        
+        // Print pH results
+        Serial.println("\n--- pH Readings ---");
+        Serial.print("pH Voltage: ");
+        Serial.print(avgVoltage, 3);
+        Serial.println(" V");
+        Serial.print("pH Value: ");
+        Serial.print(phValue, 2);
+        
+        // Print pH status
+        Serial.print(" (Status: ");
+        if(phValue < 6.5) {
+            Serial.println("Acidic)");
+        } else if(phValue > 7.5) {
+            Serial.println("Basic)");
+        } else {
+            Serial.println("Neutral)");
+        }
+        
+        // Print TDS results
+        Serial.println("\n--- TDS Readings ---");
+        Serial.print("TDS Voltage: ");
+        Serial.print(tdsAverageVoltage, 2);
+        Serial.println(" V");
+        Serial.print("TDS Value: ");
+        Serial.print(tdsValue, 0);
+        Serial.println(" ppm");
+        
+        Serial.println("====================\n");
+    }
+}

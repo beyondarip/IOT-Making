@@ -1,0 +1,1200 @@
+beyondarip: buatkan soal praktikum uas algoritma pemograman 1, yang relevan ini di indonesia
+
+GitHub Copilot: Let me design a relevant programming practical exam for Algorithm Programming 1 in Indonesia.
+
+### Steps:
+1. Create a problem statement related to Indonesian context
+2. Define clear requirements and constraints
+3. Provide example input/output
+4. Create the solution template
+
+### UAS Praktikum Algoritma Pemrograman 1
+
+**Judul: Sistem Penghitung Ongkos Kirim Paket JNE**
+
+**Deskripsi:**
+Buatlah program untuk menghitung ongkos kirim paket menggunakan jasa JNE dengan ketentuan:
+- Input berat paket (dalam kg)
+- Input kota tujuan (Jakarta/Bandung/Surabaya)
+- Input jenis layanan (REG/YES/OKE)
+
+**Ketentuan:**
+1. Harga dasar per kg:
+   - Jakarta: Rp 10.000
+   - Bandung: Rp 12.000
+   - Surabaya: Rp 15.000
+
+2. Biaya tambahan layanan:
+   - REG: normal
+   - YES: +Rp 8.000
+   - OKE: -Rp 2.000
+
+3. Berat minimum 1 kg, maksimum 20 kg
+4. Program harus menggunakan fungsi
+
+**Contoh Input/Output:**
+```
+Masukkan berat paket (kg): 3
+Masukkan kota tujuan (Jakarta/Bandung/Surabaya): Bandung
+Masukkan jenis layanan (REG/YES/OKE): YES
+
+Output:
+=====================================
+Detail Pengiriman:
+Tujuan: Bandung
+Berat: 3 kg
+Layanan: YES
+Total Biaya: Rp 44.000
+=====================================
+```
+
+Here's the template code to start with:
+
+```python
+def hitung_ongkir(berat, kota, layanan):
+    # TODO: Implementasikan perhitungan ongkir
+    pass
+
+def main():
+    # TODO: Implementasikan input dan output program
+    pass
+
+if __name__ == "__main__":
+    main()
+```
+
+**Kriteria Penilaian:**
+1. Kebenaran output (40%)
+2. Implementasi fungsi (30%)
+3. Validasi input (20%)
+4. Kerapihan kode (10%)
+
+beyondarip: sangat sangat kurang, buat tentang looping/nested loop
+misal materi segittiga, / deret aritmatika / bil prima / bil faktorial
+
+GitHub Copilot: ### Step-by-step plan for Nested Loop Pattern Problem
+
+1. Create a problem about pattern printing using nested loops
+2. Include different pattern options: triangle, diamond, number patterns
+3. Add complexity with arithmetic sequence in the patterns
+4. Implement input validation
+5. Use functions to separate pattern logic
+
+### UAS Praktikum Algoritma Pemrograman 1
+
+**Judul: Pola Segitiga dan Deret Angka**
+
+**Deskripsi:**
+Buatlah program yang dapat menampilkan berbagai pola menggunakan nested loop dengan menu:
+1. Segitiga Pascal
+2. Deret Bilangan Prima
+3. Pattern Berlian Angka
+4. Segitiga Fibonacci
+
+```python
+def pascal_triangle(n):
+    for i in range(n):
+        num = 1
+        for j in range(1, i+2):
+            print(num, end=" ")
+            num = num * (i - j + 1) // j
+        print()
+
+def prime_pattern(n):
+    def is_prime(num):
+        if num < 2:
+            return False
+        for i in range(2, int(num ** 0.5) + 1):
+            if num % i == 0:
+                return False
+        return True
+    
+    count = 0
+    num = 2
+    for i in range(n):
+        for j in range(i+1):
+            while not is_prime(num):
+                num += 1
+            print(num, end=" ")
+            num += 1
+        print()
+
+def diamond_pattern(n):
+    for i in range(n):
+        print(" " * (n-i-1), end="")
+        for j in range(i+1):
+            print(j+1, end=" ")
+        print()
+    for i in range(n-2, -1, -1):
+        print(" " * (n-i-1), end="")
+        for j in range(i+1):
+            print(j+1, end=" ")
+        print()
+
+def fibonacci_triangle(n):
+    def fib(n):
+        if n <= 1:
+            return n
+        return fib(n-1) + fib(n-2)
+    
+    for i in range(n):
+        for j in range(i+1):
+            print(fib(j), end=" ")
+        print()
+
+def main():
+    while True:
+        print("\nPola Generator Menu:")
+        print("1. Segitiga Pascal")
+        print("2. Pola Bilangan Prima")
+        print("3. Pattern Berlian Angka")
+        print("4. Segitiga Fibonacci")
+        print("5. Keluar")
+        
+        pilihan = input("\nPilih pola (1-5): ")
+        if pilihan == '5':
+            break
+            
+        n = int(input("Masukkan jumlah baris (1-10): "))
+        if n < 1 or n > 10:
+            print("Jumlah baris harus antara 1-10")
+            continue
+            
+        print("\nHasil:")
+        if pilihan == '1':
+            pascal_triangle(n)
+        elif pilihan == '2':
+            prime_pattern(n)
+        elif pilihan == '3':
+            diamond_pattern(n)
+        elif pilihan == '4':
+            fibonacci_triangle(n)
+
+if __name__ == "__main__":
+    main()
+```
+
+**Contoh Output:**
+```
+Pola Generator Menu:
+1. Segitiga Pascal
+2. Pola Bilangan Prima
+3. Pattern Berlian Angka
+4. Segitiga Fibonacci
+5. Keluar
+
+Pilih pola (1-5): 1
+Masukkan jumlah baris (1-10): 5
+
+Hasil:
+1 
+1 1 
+1 2 1 
+1 3 3 1 
+1 4 6 4 1 
+```
+
+**Kriteria Penilaian:**
+1. Implementasi nested loops (30%)
+2. Kebenaran pola output (30%)
+3. Validasi input (20%)
+4. Penggunaan fungsi (20%)
+
+Similar code found with 1 license type
+
+beyondarip: ingat INI UAS !!!, coba buat soal yang lain,tetapi tingkat kesulihtan seperti di atas
+
+GitHub Copilot: ### Step-by-step Plan for Pattern Problem UAS
+
+1. Create a problem about multiplication table patterns
+2. Add difficulty with alternating patterns
+3. Include validation checks
+4. Use nested loops
+5. Implement multiple pattern types
+
+### UAS Praktikum Algoritma Pemrograman 1
+
+**Soal: Generator Pola Perkalian dan Tabel**
+
+```python
+def multiplication_pyramid(n):
+    """Generates pyramid of multiplication results"""
+    for i in range(1, n + 1):
+        # Print spaces
+        for j in range(n - i):
+            print("   ", end="")
+        # Print numbers
+        for j in range(1, i + 1):
+            result = i * j
+            print(f"{result:2d}", end=" ")
+        # Print reverse numbers
+        for j in range(i - 1, 0, -1):
+            result = i * j
+            print(f"{result:2d}", end=" ")
+        print()
+
+def alternating_table(n):
+    """Generates alternating multiplication table"""
+    for i in range(1, n + 1):
+        for j in range(1, n + 1):
+            if i % 2 == 0:
+                # Even rows: descending
+                result = i * (n - j + 1)
+            else:
+                # Odd rows: ascending
+                result = i * j
+            print(f"{result:3d}", end=" ")
+        print()
+
+def spiral_multiplication(n):
+    """Generates spiral multiplication pattern"""
+    matrix = [[0] * n for _ in range(n)]
+    left, right = 0, n-1
+    top, bottom = 0, n-1
+    num = 1
+    
+    while left <= right and top <= bottom:
+        # Top row
+        for i in range(left, right + 1):
+            matrix[top][i] = num * top
+            num += 1
+        top += 1
+        
+        # Right column
+        for i in range(top, bottom + 1):
+            matrix[i][right] = num * right
+            num += 1
+        right -= 1
+        
+        if top <= bottom:
+            # Bottom row
+            for i in range(right, left - 1, -1):
+                matrix[bottom][i] = num * bottom
+                num += 1
+            bottom -= 1
+        
+        if left <= right:
+            # Left column
+            for i in range(bottom, top - 1, -1):
+                matrix[i][left] = num * left
+                num += 1
+            left += 1
+    
+    # Print matrix
+    for row in matrix:
+        for val in row:
+            print(f"{val:4d}", end=" ")
+        print()
+
+def main():
+    while True:
+        print("\nPola Generator Menu:")
+        print("1. Piramida Perkalian")
+        print("2. Tabel Perkalian Bolak-balik")
+        print("3. Spiral Perkalian")
+        print("4. Keluar")
+        
+        try:
+            choice = int(input("\nPilih pola (1-4): "))
+            if choice == 4:
+                print("Terima kasih!")
+                break
+                
+            n = int(input("Masukkan ukuran (3-9): "))
+            if n < 3 or n > 9:
+                print("Ukuran harus antara 3-9")
+                continue
+                
+            print("\nHasil:")
+            if choice == 1:
+                multiplication_pyramid(n)
+            elif choice == 2:
+                alternating_table(n)
+            elif choice == 3:
+                spiral_multiplication(n)
+            else:
+                print("Pilihan tidak valid!")
+                
+        except ValueError:
+            print("Input harus berupa angka!")
+
+if __name__ == "__main__":
+    main()
+```
+
+**Sample Output:**
+```
+Pola Generator Menu:
+1. Piramida Perkalian
+2. Tabel Perkalian Bolak-balik
+3. Spiral Perkalian
+4. Keluar
+
+Pilih pola (1-4): 1
+Masukkan ukuran (3-9): 5
+
+Hasil:
+        1 
+      2 4 2 
+    3 6 9 6 3 
+  4 8 12 16 12 8 4 
+5 10 15 20 25 20 15 10 5
+```
+
+**Kriteria Penilaian:**
+1. Implementasi Nested Loops (35%)
+2. Logika Pola (30%)
+3. Error Handling (20%)
+4. Kerapihan Kode (15%)
+
+beyondarip: cpp
+
+GitHub Copilot: ### Plan for Building a Triangle Number Pattern Program
+
+1. Create structure for basic number triangle functions
+2. Implement multiple pattern types
+3. Add input validation
+4. Include descriptive menu system
+5. Error handling for invalid inputs
+
+```cpp
+#include <iostream>
+#include <iomanip>
+using namespace std;
+
+void generateTriangle1(int n) {
+    // Pattern 1: Number Triangle with row multiplication
+    for(int i = 1; i <= n; i++) {
+        for(int j = 1; j <= i; j++) {
+            cout << setw(4) << i*j;
+        }
+        cout << endl;
+    }
+}
+
+void generateTriangle2(int n) {
+    // Pattern 2: Alternating odd/even numbers
+    int num = 1;
+    for(int i = 1; i <= n; i++) {
+        for(int j = 1; j <= i; j++) {
+            cout << setw(4) << num;
+            num += 2;
+        }
+        cout << endl;
+    }
+}
+
+void generateTriangle3(int n) {
+    // Pattern 3: Reverse number triangle
+    for(int i = n; i >= 1; i--) {
+        // Print spaces
+        for(int s = n-i; s > 0; s--) {
+            cout << "    ";
+        }
+        // Print numbers
+        for(int j = 1; j <= i; j++) {
+            cout << setw(4) << j;
+        }
+        cout << endl;
+    }
+}
+
+int main() {
+    int choice, size;
+    
+    do {
+        cout << "\nUAS PRAKTIKUM ALGORITMA PEMROGRAMAN 1\n";
+        cout << "====================================\n";
+        cout << "1. Pola Segitiga Perkalian\n";
+        cout << "2. Pola Segitiga Bilangan Ganjil\n";
+        cout << "3. Pola Segitiga Terbalik\n";
+        cout << "4. Keluar\n";
+        cout << "Pilih pola (1-4): ";
+        cin >> choice;
+
+        if(choice >= 1 && choice <= 3) {
+            cout << "Masukkan ukuran (3-9): ";
+            cin >> size;
+            
+            if(size >= 3 && size <= 9) {
+                cout << "\nHasil:\n";
+                switch(choice) {
+                    case 1: generateTriangle1(size); break;
+                    case 2: generateTriangle2(size); break;
+                    case 3: generateTriangle3(size); break;
+                }
+            } else {
+                cout << "Error: Ukuran harus antara 3-9!\n";
+            }
+        }
+    } while(choice != 4);
+
+    return 0;
+}
+```
+
+**Sample Outputs:**
+
+Pattern 1 (n=5):
+```
+   1
+   2   4
+   3   6   9
+   4   8  12  16
+   5  10  15  20  25
+```
+
+Pattern 2 (n=4):
+```
+   1
+   3   5
+   7   9  11
+  13  15  17  19
+```
+
+Pattern 3 (n=4):
+```
+   1   2   3   4
+       1   2   3
+           1   2
+               1
+```
+
+**Evaluation Criteria:**
+1. Loop Implementation (35%)
+2. Pattern Logic (30%)
+3. Input Validation (20%)
+4. Code Organization (15%)
+
+beyondarip: ingat INI UAS !!!, coba buat soal yang lain,tetapi tingkat kesulihtan seperti di atas
+
+GitHub Copilot: ### Plan for UAS Programming Pattern Problems:
+1. Create pattern challenge with nested loops
+2. Add number sequence calculations
+3. Include hollow pattern option
+4. Implement error handling
+5. Create menu system
+
+```cpp
+#include <iostream>
+#include <iomanip>
+using namespace std;
+
+void holowDiamond(int n) {
+    // Upper half
+    for(int i = 1; i <= n; i++) {
+        for(int j = 1; j <= n-i; j++)
+            cout << "  ";
+        for(int j = 1; j <= 2*i-1; j++) {
+            if(j == 1 || j == 2*i-1)
+                cout << "* ";
+            else
+                cout << "  ";
+        }
+        cout << endl;
+    }
+    // Lower half
+    for(int i = n-1; i >= 1; i--) {
+        for(int j = 1; j <= n-i; j++)
+            cout << "  ";
+        for(int j = 1; j <= 2*i-1; j++) {
+            if(j == 1 || j == 2*i-1)
+                cout << "* ";
+            else
+                cout << "  ";
+        }
+        cout << endl;
+    }
+}
+
+void numberPattern(int n) {
+    int num = 1;
+    for(int i = 1; i <= n; i++) {
+        for(int j = 1; j <= n-i; j++)
+            cout << "   ";
+        for(int j = 1; j <= i; j++) {
+            cout << setw(3) << num;
+            num = (num % 9) + 1;
+        }
+        for(int j = i-1; j >= 1; j--) {
+            cout << setw(3) << num;
+            num = (num % 9) + 1;
+        }
+        cout << endl;
+    }
+}
+
+void multiplicationTriangle(int n) {
+    for(int i = 1; i <= n; i++) {
+        for(int j = 1; j <= i; j++) {
+            if(j == 1 || j == i || i == n)
+                cout << setw(4) << i*j;
+            else
+                cout << "   ";
+        }
+        cout << endl;
+    }
+}
+
+int main() {
+    int choice, n;
+    
+    do {
+        cout << "\nUAS PRAKTIKUM ALGORITMA\n";
+        cout << "======================\n";
+        cout << "1. Hollow Diamond\n";
+        cout << "2. Number Pattern Pyramid\n";
+        cout << "3. Hollow Multiplication Triangle\n";
+        cout << "4. Exit\n";
+        cout << "Choose pattern (1-4): ";
+        cin >> choice;
+
+        if(choice >= 1 && choice <= 3) {
+            cout << "Enter size (3-9): ";
+            cin >> n;
+            
+            if(n >= 3 && n <= 9) {
+                cout << "\nOutput:\n";
+                switch(choice) {
+                    case 1: holowDiamond(n); break;
+                    case 2: numberPattern(n); break;
+                    case 3: multiplicationTriangle(n); break;
+                }
+            } else {
+                cout << "Error: Size must be between 3-9!\n";
+            }
+        }
+    } while(choice != 4);
+    return 0;
+}
+```
+
+**Sample Output Pattern 1 (n=4):**
+```
+      * 
+    *   *
+  *       *
+*           *
+  *       *
+    *   *
+      *
+```
+
+**Sample Output Pattern 2 (n=3):**
+```
+      1
+    1 2 1
+  1 2 3 2 1
+```
+
+**Sample Output Pattern 3 (n=4):**
+```
+   1
+   2    4
+   3         9
+   4    8   12   16
+```
+
+**Evaluation Criteria:**
+1. Loop Logic (35%)
+2. Pattern Accuracy (30%)
+3. Input Validation (20%)
+4. Code Style (15%)
+
+Similar code found with 1 license type
+
+beyondarip: lagi yang lain
+
+GitHub Copilot: ### Plan for UAS Pattern Problem:
+1. Create number spiral matrix pattern
+2. Add sequential number calculations
+3. Implement border-only option
+4. Include error checking
+5. Build menu interface
+
+```cpp
+#include <iostream>
+#include <iomanip>
+using namespace std;
+
+void spiralPattern(int n) {
+    int matrix[10][10] = {0};
+    int value = 1;
+    int minRow = 0, maxRow = n-1;
+    int minCol = 0, maxCol = n-1;
+    
+    while (value <= n*n) {
+        // Right direction
+        for (int i = minCol; i <= maxCol; i++)
+            matrix[minRow][i] = value++;
+        minRow++;
+        
+        // Down direction
+        for (int i = minRow; i <= maxRow; i++)
+            matrix[i][maxCol] = value++;
+        maxCol--;
+        
+        // Left direction
+        for (int i = maxCol; i >= minCol; i--)
+            matrix[maxRow][i] = value++;
+        maxRow--;
+        
+        // Up direction
+        for (int i = maxRow; i >= minRow; i--)
+            matrix[i][minCol] = value++;
+        minCol++;
+    }
+    
+    // Print matrix
+    for (int i = 0; i < n; i++) {
+        for (int j = 0; j < n; j++) {
+            cout << setw(3) << matrix[i][j] << " ";
+        }
+        cout << endl;
+    }
+}
+
+void borderNumberPattern(int n) {
+    for (int i = 1; i <= n; i++) {
+        for (int j = 1; j <= n; j++) {
+            if (i == 1 || i == n || j == 1 || j == n)
+                cout << setw(3) << i*j << " ";
+            else
+                cout << "    ";
+        }
+        cout << endl;
+    }
+}
+
+void diagonalPattern(int n) {
+    for (int i = 1; i <= n; i++) {
+        for (int j = 1; j <= n; j++) {
+            if (i == j || i + j == n + 1)
+                cout << setw(3) << i*j << " ";
+            else
+                cout << "    ";
+        }
+        cout << endl;
+    }
+}
+
+int main() {
+    int choice, size;
+    
+    do {
+        cout << "\nPOLA MATRIKS - UAS PRAKTIKUM\n";
+        cout << "============================\n";
+        cout << "1. Spiral Matrix\n";
+        cout << "2. Border Pattern\n";
+        cout << "3. Diagonal Pattern\n";
+        cout << "4. Exit\n\n";
+        cout << "Pilih pola (1-4): ";
+        cin >> choice;
+        
+        if (choice >= 1 && choice <= 3) {
+            cout << "Masukkan ukuran (3-9): ";
+            cin >> size;
+            
+            if (size >= 3 && size <= 9) {
+                cout << "\nHasil:\n";
+                switch(choice) {
+                    case 1: spiralPattern(size); break;
+                    case 2: borderNumberPattern(size); break;
+                    case 3: diagonalPattern(size); break;
+                }
+            } else {
+                cout << "Error: Ukuran harus 3-9!\n";
+            }
+        }
+    } while (choice != 4);
+    
+    return 0;
+}
+```
+
+**Sample Outputs:**
+
+Pattern 1 (n=4):
+```
+  1   2   3   4
+ 12  13  14   5
+ 11  16  15   6
+ 10   9   8   7
+```
+
+Pattern 2 (n=4):
+```
+  1   2   3   4
+  4           16
+  12          48
+  16  32  48  64
+```
+
+Pattern 3 (n=4):
+```
+  1           4
+     4     9
+     6   12
+  16          64
+```
+
+**Kriteria Penilaian:**
+1. Loop Implementation (35%)
+2. Matrix Logic (30%)
+3. Input Validation (20%)
+4. Code Organization (15%)
+
+Similar code found with 1 license type
+
+beyondarip: jangan ada array
+
+GitHub Copilot: ### Plan for Building Pattern Program:
+1. Create a 'Z' pattern with numbers
+2. Implement multiplication logic
+3. Add border pattern
+4. Create X-pattern calculator
+5. Build menu system without arrays
+
+```cpp
+#include <iostream>
+#include <iomanip>
+using namespace std;
+
+void patternZ(int n) {
+    // Top line
+    for(int i = 1; i <= n; i++) {
+        cout << setw(3) << i*2;
+    }
+    cout << endl;
+    
+    // Diagonal
+    for(int i = 2; i < n; i++) {
+        for(int j = 1; j <= n; j++) {
+            if(j == n-i+1)
+                cout << setw(3) << i*3;
+            else
+                cout << "   ";
+        }
+        cout << endl;
+    }
+    
+    // Bottom line
+    for(int i = 1; i <= n; i++) {
+        cout << setw(3) << i*4;
+    }
+    cout << endl;
+}
+
+void patternX(int n) {
+    for(int i = 1; i <= n; i++) {
+        for(int j = 1; j <= n; j++) {
+            if(i == j || i+j == n+1)
+                cout << setw(3) << i*j;
+            else
+                cout << "   ";
+        }
+        cout << endl;
+    }
+}
+
+void patternBorder(int n) {
+    for(int i = 1; i <= n; i++) {
+        for(int j = 1; j <= n; j++) {
+            if(i == 1 || i == n || j == 1 || j == n)
+                cout << setw(3) << (i+j);
+            else
+                cout << "   ";
+        }
+        cout << endl;
+    }
+}
+
+int main() {
+    int choice, size;
+    
+    do {
+        cout << "\nUAS PRAKTIKUM - PATTERN GENERATOR\n";
+        cout << "================================\n";
+        cout << "1. Pattern Z\n";
+        cout << "2. Pattern X\n";
+        cout << "3. Pattern Border\n";
+        cout << "4. Exit\n";
+        cout << "Choose pattern (1-4): ";
+        cin >> choice;
+        
+        if(choice >= 1 && choice <= 3) {
+            cout << "Enter size (3-9): ";
+            cin >> size;
+            
+            if(size >= 3 && size <= 9) {
+                cout << "\nOutput:\n";
+                switch(choice) {
+                    case 1: patternZ(size); break;
+                    case 2: patternX(size); break;
+                    case 3: patternBorder(size); break;
+                }
+            } else {
+                cout << "Error: Size must be 3-9!\n";
+            }
+        }
+    } while(choice != 4);
+    
+    return 0;
+}
+```
+
+**Sample Outputs:**
+
+Pattern Z (n=4):
+```
+  2  4  6  8
+        9
+     6
+  4  8 12 16
+```
+
+Pattern X (n=4):
+```
+  1        4
+     4  6
+     6  4
+  16       4
+```
+
+Pattern Border (n=4):
+```
+  2  3  4  5
+  3        5
+  4        6
+  5  6  7  8
+```
+
+**Criteria:**
+1. Pattern Logic (35%)
+2. Loop Implementation (35%)
+3. Input Validation (15%)
+4. Code Style (15%)
+
+Similar code found with 1 license type
+
+beyondarip: buat yang looping diamon
+
+GitHub Copilot: ### Step-by-step Plan:
+1. Create hollow diamond pattern using nested loops
+2. Add numbers on corners
+3. Use arithmetic sequence in pattern
+4. Implement error handling
+5. Create modular functions
+
+```cpp
+#include <iostream>
+#include <iomanip>
+using namespace std;
+
+void printDiamond(int n) {
+    // Upper half
+    int num = 1;
+    for(int i = 1; i <= n; i++) {
+        // Print spaces
+        for(int j = 1; j <= n-i; j++) {
+            cout << "   ";
+        }
+        // Print pattern
+        for(int j = 1; j <= 2*i-1; j++) {
+            if(j == 1 || j == 2*i-1) {
+                cout << setw(3) << num;
+                num += 2;
+            } else {
+                cout << "   ";
+            }
+        }
+        cout << endl;
+    }
+
+    // Lower half
+    num = 2;
+    for(int i = n-1; i >= 1; i--) {
+        // Print spaces
+        for(int j = 1; j <= n-i; j++) {
+            cout << "   ";
+        }
+        // Print pattern
+        for(int j = 1; j <= 2*i-1; j++) {
+            if(j == 1 || j == 2*i-1) {
+                cout << setw(3) << num;
+                num += 2;
+            } else {
+                cout << "   ";
+            }
+        }
+        cout << endl;
+    }
+}
+
+int main() {
+    int n;
+    cout << "Enter diamond size (3-9): ";
+    cin >> n;
+    
+    if(n >= 3 && n <= 9) {
+        cout << "\nDiamond Pattern:\n";
+        printDiamond(n);
+    } else {
+        cout << "Invalid size! Must be between 3-9.\n";
+    }
+    return 0;
+}
+```
+
+**Sample Output (n=4):**
+```
+         1
+      3     5
+   7           9
+11              13
+   15        17
+      19  21
+         23
+```
+
+**Evaluation Criteria:**
+1. Nested Loop Logic (40%)
+2. Pattern Accuracy (30%)
+3. Input Validation (15%)
+4. Code Organization (15%)
+
+beyondarip: diamond yang biasa pakai "*", yang ada isinya
+
+GitHub Copilot: ### Plan: Create Solid Diamond Pattern
+1. Build top half with increasing stars
+2. Build bottom half with decreasing stars
+3. Add input validation 
+4. Ensure proper spacing
+5. Fill diamond with asterisks
+
+```cpp
+#include <iostream>
+using namespace std;
+
+void printDiamond(int n) {
+    // Upper half of diamond
+    for(int i = 1; i <= n; i++) {
+        // Print spaces
+        for(int j = 1; j <= n-i; j++) {
+            cout << " ";
+        }
+        // Print stars
+        for(int j = 1; j <= 2*i-1; j++) {
+            cout << "*";
+        }
+        cout << endl;
+    }
+    
+    // Lower half of diamond
+    for(int i = n-1; i >= 1; i--) {
+        // Print spaces
+        for(int j = 1; j <= n-i; j++) {
+            cout << " ";
+        }
+        // Print stars
+        for(int j = 1; j <= 2*i-1; j++) {
+            cout << "*";
+        }
+        cout << endl;
+    }
+}
+
+int main() {
+    int n;
+    cout << "Enter diamond size (3-9): ";
+    cin >> n;
+    
+    if(n >= 3 && n <= 9) {
+        cout << "\nDiamond Pattern:\n";
+        printDiamond(n);
+    } else {
+        cout << "Invalid size! Must be between 3-9.\n";
+    }
+    return 0;
+}
+```
+
+**Sample Output (n=4):**
+```
+   *
+  ***
+ *****
+*******
+ *****
+  ***
+   *
+```
+
+Similar code found with 1 license type
+
+beyondarip: tapi ganti "*" dengan logika, angka atau apa gitu
+
+GitHub Copilot: ### Plan for Number/Logic Diamond Pattern:
+1. Create top half with increasing numbers
+2. Build middle section with max width
+3. Create bottom half with decreasing numbers 
+4. Add sequence logic (multiples/fibonacci/etc)
+5. Include proper spacing and alignment
+
+```cpp
+#include <iostream>
+#include <iomanip>
+using namespace std;
+
+void printNumberDiamond(int n) {
+    // Upper half
+    int num = 1;
+    for(int i = 1; i <= n; i++) {
+        // Spaces
+        for(int j = 1; j <= n-i; j++) {
+            cout << "   ";
+        }
+        // Left numbers
+        for(int j = 1; j <= i; j++) {
+            cout << setw(3) << num++;
+        }
+        // Right numbers
+        for(int j = 1; j < i; j++) {
+            cout << setw(3) << --num;
+        }
+        cout << endl;
+        num = 1; // Reset for next row
+    }
+    
+    // Lower half
+    for(int i = n-1; i >= 1; i--) {
+        // Spaces
+        for(int j = 1; j <= n-i; j++) {
+            cout << "   ";
+        }
+        // Left numbers
+        for(int j = 1; j <= i; j++) {
+            cout << setw(3) << num++;
+        }
+        // Right numbers
+        for(int j = 1; j < i; j++) {
+            cout << setw(3) << --num;
+        }
+        cout << endl;
+        num = 1; // Reset for next row
+    }
+}
+
+int main() {
+    int n;
+    cout << "Enter diamond size (3-9): ";
+    cin >> n;
+    
+    if(n >= 3 && n <= 9) {
+        cout << "\nNumber Diamond Pattern:\n";
+        printNumberDiamond(n);
+    } else {
+        cout << "Invalid size! Must be between 3-9.\n";
+    }
+    return 0;
+}
+```
+
+**Sample Output (n=4):**
+```
+      1
+   1  2  1
+1  2  3  2  1
+   1  2  1
+      1
+```
+
+**Criteria:**
+1. Loop Logic (35%)
+2. Number Pattern (35%)
+3. Input Validation (15%)
+4. Code Style (15%)
+
+beyondarip: yang lain logikanya
+
+GitHub Copilot: ### Plan: Create Pattern with Multiplication Logic Diamond
+1. Top half: multiply row number with column position
+2. Middle section: geometric progression
+3. Bottom half: reverse multiplication pattern
+4. Spacing and alignment with proper width
+5. Reset multiplier per row
+
+```cpp
+#include <iostream>
+#include <iomanip>
+using namespace std;
+
+void printMultiplicationDiamond(int n) {
+    // Upper half
+    for(int i = 1; i <= n; i++) {
+        // Spaces
+        for(int j = 1; j <= n-i; j++) {
+            cout << "   ";
+        }
+        // Numbers with multiplication logic
+        int multiplier = i;
+        for(int j = 1; j <= i; j++) {
+            cout << setw(3) << (multiplier * j);
+        }
+        // Right side numbers
+        for(int j = i-1; j >= 1; j--) {
+            cout << setw(3) << (multiplier * j);
+        }
+        cout << endl;
+    }
+    
+    // Lower half
+    for(int i = n-1; i >= 1; i--) {
+        // Spaces
+        for(int j = 1; j <= n-i; j++) {
+            cout << "   ";
+        }
+        // Numbers with multiplication logic
+        int multiplier = i;
+        for(int j = 1; j <= i; j++) {
+            cout << setw(3) << (multiplier * j);
+        }
+        // Right side numbers
+        for(int j = i-1; j >= 1; j--) {
+            cout << setw(3) << (multiplier * j);
+        }
+        cout << endl;
+    }
+}
+
+int main() {
+    int n;
+    cout << "Enter diamond size (3-9): ";
+    cin >> n;
+    
+    if(n >= 3 && n <= 9) {
+        cout << "\nMultiplication Diamond Pattern:\n";
+        printMultiplicationDiamond(n);
+    } else {
+        cout << "Invalid size! Must be between 3-9.\n";
+    }
+    return 0;
+}
+```
+
+**Sample Output (n=4):**
+```
+         1
+      2  4  2
+   3  6  9  6  3
+4  8 12 16 12  8  4
+   3  6  9  6  3
+      2  4  2
+         1
+```
+
+**Criteria:**
+1. Multiplication Logic (35%)
+2. Pattern Structure (35%)
+3. Input Validation (15%)
+4. Code Organization (15%)

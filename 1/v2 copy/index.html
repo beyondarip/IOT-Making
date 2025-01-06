@@ -1,0 +1,261 @@
+<!DOCTYPE html>
+<html lang="id">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard Water Vending</title>
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Chart.js CDN -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="styles.css">
+</head>
+
+<body class="flex h-screen bg-gray-100">
+    <!-- Sidebar -->
+    <!-- Sidebar -->
+    <aside class="w-64 bg-white shadow-md">
+        <div class="p-4">
+            <h1 class="text-2xl font-bold text-center">Water Vending</h1>
+        </div>
+        <nav class="mt-10">
+            <a href="#" data-section="dashboard"
+                class="nav-link flex items-center py-2 px-8 text-gray-700 hover:bg-gray-200">
+                <!-- Icon SVG -->
+                <span>Dashboard</span>
+            </a>
+            <a href="#" data-section="monitoring"
+                class="nav-link flex items-center py-2 px-8 text-gray-700 hover:bg-gray-200">
+                <!-- Icon SVG -->
+                <span>Monitoring</span>
+            </a>
+            <a href="#" data-section="manajemen-mesin"
+                class="nav-link flex items-center py-2 px-8 text-gray-700 hover:bg-gray-200">
+                <!-- Icon SVG -->
+                <span>Manajemen Mesin</span>
+            </a>
+            <a href="#" data-section="transaksi"
+                class="nav-link flex items-center py-2 px-8 text-gray-700 hover:bg-gray-200">
+                <!-- Icon SVG -->
+                <span>Transaksi</span>
+            </a>
+            <a href="#" data-section="analitik"
+                class="nav-link flex items-center py-2 px-8 text-gray-700 hover:bg-gray-200">
+                <!-- Icon SVG -->
+                <span>Analitik</span>
+            </a>
+            <a href="#" data-section="pengaturan"
+                class="nav-link flex items-center py-2 px-8 text-gray-700 hover:bg-gray-200">
+                <!-- Icon SVG -->
+                <span>Pengaturan</span>
+            </a>
+        </nav>
+    </aside>
+
+
+    <!-- Main Content -->
+    <div class="flex-1 flex flex-col">
+        <!-- Header -->
+        <header class="flex items-center justify-between bg-white p-4 shadow-md">
+            <div class="flex items-center">
+                <h2 class="text-xl font-semibold">Dashboard</h2>
+            </div>
+            <div class="flex items-center space-x-4">
+                <div class="relative">
+                    <button id="notificationButton" class="flex text-gray-700 focus:outline-none">
+                        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6 6 0 00-5-5.917V5a2 2 0 10-4 0v.083A6 6 0 006 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9" />
+                        </svg>
+                        <!-- Notification Badge -->
+                        <span
+                            class="absolute top-0 right-0 inline-flex items-center justify-center px-2 py-1 text-xs font-bold leading-none text-red-100 bg-red-600 rounded-full">3</span>
+                    </button>
+                    <!-- Notification Dropdown -->
+                    <div id="notificationDropdown"
+                        class="hidden absolute right-0 mt-2 w-48 bg-white border rounded-md shadow-lg">
+                        <a href="#" class="block px-4 py-2 text-gray-800 hover:bg-gray-200">Notifikasi 1</a>
+                        <a href="#" class="block px-4 py-2 text-gray-800 hover:bg-gray-200">Notifikasi 2</a>
+                        <a href="#" class="block px-4 py-2 text-gray-800 hover:bg-gray-200">Notifikasi 3</a>
+                    </div>
+                </div>
+                <div class="flex items-center">
+                    <img src="https://via.placeholder.com/32" alt="User Avatar" class="w-8 h-8 rounded-full">
+                    <span class="ml-2">Admin</span>
+                </div>
+            </div>
+        </header>
+
+        <!-- Content Area -->
+        <!-- Content Area -->
+        <main class="flex-1 p-6 overflow-y-auto">
+            <!-- Dashboard Section -->
+            <section id="dashboard" class="section">
+                <h3 class="text-lg font-semibold mb-4">Selamat Datang di Dashboard Water Vending!</h3>
+                <!-- Kartu-kartu Statistik -->
+                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                    <!-- Card 1 -->
+                    <div class="bg-white p-4 rounded-lg shadow">
+                        <h4 class="text-md font-semibold">Total Mesin Vending</h4>
+                        <p class="text-2xl mt-2">10</p>
+                    </div>
+                    <!-- Card 2 -->
+                    <div class="bg-white p-4 rounded-lg shadow">
+                        <h4 class="text-md font-semibold">Status Mesin Aktif</h4>
+                        <p class="text-2xl mt-2">8</p>
+                    </div>
+                    <!-- Card 3 -->
+                    <div class="bg-white p-4 rounded-lg shadow">
+                        <h4 class="text-md font-semibold">Rata-rata TDS</h4>
+                        <p class="text-2xl mt-2">350 ppm</p>
+                    </div>
+                    <!-- Card 4 -->
+                    <div class="bg-white p-4 rounded-lg shadow">
+                        <h4 class="text-md font-semibold">Rata-rata pH</h4>
+                        <p class="text-2xl mt-2">7.2</p>
+                    </div>
+                    <!-- Card 5 -->
+                    <div class="bg-white p-4 rounded-lg shadow">
+                        <h4 class="text-md font-semibold">Transaksi Hari Ini</h4>
+                        <p class="text-2xl mt-2">150</p>
+                    </div>
+                    <!-- Card 6 -->
+                    <div class="bg-white p-4 rounded-lg shadow">
+                        <h4 class="text-md font-semibold">Notifikasi Terbaru</h4>
+                        <ul class="list-disc list-inside">
+                            <li>Vending-3 pH turun di bawah batas normal</li>
+                            <li>Vending-7 memerlukan pemeliharaan</li>
+                            <li>Vending-2 TDS meningkat</li>
+                        </ul>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Monitoring Section -->
+            <section id="monitoring" class="section hidden">
+                <h3 class="text-lg font-semibold mb-4">Monitoring Kualitas Air</h3>
+                <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                    <!-- Grafik TDS -->
+                    <div class="bg-white p-4 rounded-lg shadow">
+                        <h4 class="text-md font-semibold mb-2">Grafik TDS</h4>
+                        <canvas id="tdsChart" width="400" height="200"></canvas>
+                    </div>
+                    <!-- Grafik pH -->
+                    <div class="bg-white p-4 rounded-lg shadow">
+                        <h4 class="text-md font-semibold mb-2">Grafik pH</h4>
+                        <canvas id="phChart" width="400" height="200"></canvas>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Manajemen Mesin Vending Section -->
+            <section id="manajemen-mesin" class="section hidden">
+                <h3 class="text-lg font-semibold mb-4">Manajemen Mesin Vending</h3>
+                <!-- Tombol Tambah Mesin -->
+                <div class="mb-4">
+                    <button id="addMachineButton" class="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600">
+                        Tambah Mesin Vending
+                    </button>
+                </div>
+                <!-- Tabel Daftar Mesin Vending -->
+                <div class="overflow-x-auto">
+                    <table class="min-w-full bg-white rounded-lg shadow">
+                        <thead>
+                            <tr>
+                                <th class="py-2 px-4 border-b">ID</th>
+                                <th class="py-2 px-4 border-b">Nama</th>
+                                <th class="py-2 px-4 border-b">Lokasi</th>
+                                <th class="py-2 px-4 border-b">Status</th>
+                                <th class="py-2 px-4 border-b">Aksi</th>
+                            </tr>
+                        </thead>
+                        <tbody id="machineTableBody">
+                            <!-- Baris Mesin Vending Dummy -->
+                            <tr>
+                                <td class="py-2 px-4 border-b text-center">1</td>
+                                <td class="py-2 px-4 border-b">Vending-1</td>
+                                <td class="py-2 px-4 border-b">Lokasi A</td>
+                                <td class="py-2 px-4 border-b text-center">
+                                    <span class="px-2 py-1 bg-green-200 text-green-800 rounded">Aktif</span>
+                                </td>
+                                <td class="py-2 px-4 border-b text-center">
+                                    <button
+                                        class="editButton bg-yellow-500 text-white px-2 py-1 rounded hover:bg-yellow-600 mr-2">Edit</button>
+                                    <button
+                                        class="deleteButton bg-red-500 text-white px-2 py-1 rounded hover:bg-red-600">Hapus</button>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td class="py-2 px-4 border-b text-center">2</td>
+                                <td class="py-2 px-4 border-b">Vending-2</td>
+                                <td class="py-2 px-4 border-b">Lokasi B</td>
+                                <td class="py-2 px-4 border-b text-center">
+                                    <span class="px-2 py-1 bg-yellow-200 text-yellow-800 rounded">Maintenance</span>
+                                </td>
+                                <td class="py-2 px-4 border-b text-center">
+                                    <button
+                                        class="editButton bg-yellow-500 text-white px-2 py-1 rounded hover:bg-yellow-600 mr-2">Edit</button>
+                                    <button
+                                        class="deleteButton bg-red-500 text-white px-2 py-1 rounded hover:bg-red-600">Hapus</button>
+                                </td>
+                            </tr>
+                            <!-- Tambahkan baris lainnya sesuai kebutuhan -->
+                        </tbody>
+                    </table>
+                </div>
+            </section>
+
+            <!-- Transaksi Section -->
+            <section id="transaksi" class="section hidden">
+                <!-- Konten Transaksi -->
+            </section>
+
+            <!-- Analitik Section -->
+            <section id="analitik" class="section hidden">
+                <!-- Konten Analitik -->
+            </section>
+
+            <!-- Pengaturan Section -->
+            <section id="pengaturan" class="section hidden">
+                <!-- Konten Pengaturan -->
+            </section>
+        </main>
+        <!-- Modal Tambah/Edit Mesin Vending -->
+<div id="machineModal" class="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 hidden">
+    <div class="bg-white rounded-lg shadow-lg w-96 p-6">
+        <h3 id="modalTitle" class="text-lg font-semibold mb-4">Tambah Mesin Vending</h3>
+        <form id="machineForm">
+            <div class="mb-4">
+                <label for="machineName" class="block text-sm font-medium text-gray-700">Nama Mesin</label>
+                <input type="text" id="machineName" name="machineName" class="mt-1 block w-full border border-gray-300 rounded-md p-2" required>
+            </div>
+            <div class="mb-4">
+                <label for="machineLocation" class="block text-sm font-medium text-gray-700">Lokasi</label>
+                <input type="text" id="machineLocation" name="machineLocation" class="mt-1 block w-full border border-gray-300 rounded-md p-2" required>
+            </div>
+            <div class="mb-4">
+                <label for="machineStatus" class="block text-sm font-medium text-gray-700">Status</label>
+                <select id="machineStatus" name="machineStatus" class="mt-1 block w-full border border-gray-300 rounded-md p-2" required>
+                    <option value="Aktif">Aktif</option>
+                    <option value="Non-Aktif">Non-Aktif</option>
+                    <option value="Maintenance">Maintenance</option>
+                </select>
+            </div>
+            <div class="flex justify-end">
+                <button type="button" id="cancelButton" class="bg-gray-500 text-white px-4 py-2 rounded mr-2 hover:bg-gray-600">Batal</button>
+                <button type="submit" class="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600">Simpan</button>
+            </div>
+        </form>
+    </div>
+</div>
+
+
+    </div>
+
+    <!-- JavaScript -->
+    <script src="script.js"></script>
+</body>
+
+</html>

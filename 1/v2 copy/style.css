@@ -1,0 +1,11 @@
+/* styles.css */
+
+/* Dropdown Animations */
+#notificationDropdown {
+    transition: opacity 0.3s ease, transform 0.3s ease;
+}
+
+/* Modal Animations */
+#machineModal {
+    transition: opacity 0.3s ease, transform 0.3s ease;
+}

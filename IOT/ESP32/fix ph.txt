@@ -1,0 +1,105 @@
+// Konfigurasi Pin dan Konstanta
+const int PH_PIN = 36;         // GPIO36 (VP) untuk input analog
+const int SAMPLES = 10;        // Jumlah sampel untuk average reading
+const float VOLTAGE_REF = 3.3 - 0.1; // Referensi voltage ESP32
+
+// Variabel Kalibrasi pH
+const float PH7_VOLTAGE = 2.5; // Voltage pada pH 7 (perlu dikalibrasi)
+const float PH4_VOLTAGE = 3.0; // Voltage pada pH 4 (perlu dikalibrasi)
+const float VOLTAGE_PER_PH = (PH4_VOLTAGE - PH7_VOLTAGE) / 3; // Voltage per unit pH
+
+// Variabel untuk pembacaan
+float avgVoltage = 0.0;
+float phValue = 0.0;
+
+void setup() {
+  // Inisialisasi Serial
+  Serial.begin(115200);
+  while (!Serial) {
+    ; // Tunggu serial port terhubung
+  }
+  
+  // Konfigurasi ADC
+  analogSetWidth(12);          // Set ADC ke 12-bit (0-4095)
+  analogSetAttenuation(ADC_11db); // Set attenuation untuk range 0-3.3V
+  
+  // Pesan inisialisasi
+  Serial.println("\nInisialisasi Sensor pH ESP32");
+  Serial.println("----------------------------");
+  
+  // Tunggu sensor stabil
+  delay(2000);
+}
+
+// Fungsi untuk membaca dan memfilter nilai analog
+float readPHVoltage() {
+  float voltage = 0.0;
+  int samples[SAMPLES];
+  
+  // Ambil beberapa sampel
+  for(int i = 0; i < SAMPLES; i++) {
+    samples[i] = analogRead(PH_PIN);
+    delay(10);
+  }
+  
+  // Sort samples untuk median filtering
+  for(int i = 0; i < SAMPLES-1; i++) {
+    for(int j = i+1; j < SAMPLES; j++) {
+      if(samples[i] > samples[j]) {
+        int temp = samples[i];
+        samples[i] = samples[j];
+        samples[j] = temp;
+      }
+    }
+  }
+  
+  // Buang 2 nilai tertinggi dan terendah
+  int validSamples = SAMPLES - 4;
+  float avgValue = 0;
+  for(int i = 2; i < SAMPLES-2; i++) {
+    avgValue += samples[i];
+  }
+  
+  // Hitung rata-rata dan konversi ke voltage
+  voltage = (avgValue / validSamples) * (VOLTAGE_REF / 4095.0);
+  return voltage;
+}
+
+// Fungsi untuk mengkonversi voltage ke nilai pH
+float voltageToPH(float voltage) {
+  return 7.0 + ((PH7_VOLTAGE - voltage) / VOLTAGE_PER_PH);
+}
+
+void loop() {
+  // Baca voltage dengan filter
+  avgVoltage = readPHVoltage();
+  
+  // Konversi ke pH
+  phValue = voltageToPH(avgVoltage);
+  
+  // Cek validitas pembacaan
+  if (phValue < 0 || phValue > 14) {
+    Serial.println("Error: Pembacaan pH tidak valid!");
+    Serial.println("Periksa koneksi sensor dan kalibrasi");
+  } else {
+    // Tampilkan hasil
+    Serial.println("\n--- Hasil Pembacaan ---");
+    Serial.print("Voltage: ");
+    Serial.print(avgVoltage, 3);
+    Serial.println(" V");
+    Serial.print("Nilai pH: ");
+    Serial.println(phValue, 2);
+    
+    // Tambahan informasi status pH
+    Serial.print("Status: ");
+    if(phValue < 6.5) {
+      Serial.println("Asam");
+    } else if(phValue > 7.5) {
+      Serial.println("Basa");
+    } else {
+      Serial.println("Netral");
+    }
+  }
+  
+  delay(500); // Delay 1 detik antara pembacaan
+}
